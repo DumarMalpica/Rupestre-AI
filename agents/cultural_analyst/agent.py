@@ -20,8 +20,8 @@ def cultural_analyst_node(state: RupestreState) -> dict:
     """
     tracer = get_tracer()
     site = state.get("site_name", "desconocido")
-    motifs = state.get("detected_motifs", [])
-    parallels = state.get("similar_motifs", [])
+    _motifs = state.get("detected_motifs", [])     
+    _parallels = state.get("similar_motifs", [])    
 
     logger.info(f"Analizando contexto cultural para: {site}")
 
