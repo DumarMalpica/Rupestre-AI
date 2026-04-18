@@ -42,7 +42,9 @@ def comparator_node(state: RupestreState) -> dict:
             has_regional_parallels = any(
                 match["score"] > 0.75
                 for m in similar_motifs
+                if isinstance(m, dict)
                 for match in (m.get("top_matches") or [])
+                if isinstance(match, dict)
             )
             # ─────────────────────────────────────────────────
 
