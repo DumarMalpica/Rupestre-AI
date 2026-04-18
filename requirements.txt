@@ -35,7 +35,7 @@ supervision==0.24.0
 # ── Corpus / NLP ──────────────────────────
 pymupdf==1.24.14
 easyocr==1.7.2
-openai-whisper==20240930
+faster-whisper==1.1.0
 spacy==3.8.3
 
 # ── API ───────────────────────────────────
