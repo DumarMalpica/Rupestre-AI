@@ -55,7 +55,7 @@ weasyprint==62.3
 redis==5.2.1
 celery==5.4.0
 minio==7.2.11
-sqlalchemy==2.0.36
+sqlalchemy==2.0.35
 asyncpg==0.30.0
 
 # ── Testing ───────────────────────────────
