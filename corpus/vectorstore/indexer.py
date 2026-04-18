@@ -13,6 +13,7 @@ EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
 def get_embedder():
     """Carga el modelo de embeddings (lazy)."""
     from sentence_transformers import SentenceTransformer
+
     return SentenceTransformer(EMBEDDING_MODEL)
 
 

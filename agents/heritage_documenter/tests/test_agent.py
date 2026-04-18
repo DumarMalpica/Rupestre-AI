@@ -16,12 +16,16 @@ MOCK_FULL_STATE = {
     **MOCK_STATE,
     "enhanced_image": "data/samples/test_pictogram.jpg",
     "image_quality_ok": True,
-    "detected_motifs": [{"id": "m001", "clase": "espiral", "confidence": 0.9, "bbox": [0,0,100,100]}],
+    "detected_motifs": [
+        {"id": "m001", "clase": "espiral", "confidence": 0.9, "bbox": [0, 0, 100, 100]}
+    ],
     "motif_count": 1,
     "similar_motifs": [],
     "has_regional_parallels": False,
     "cultural_interpretation": "Motivo asociado a la cosmología Muisca.",
-    "cited_sources": [{"title": "Arte Rupestre Boyacá", "author": "ICANH", "year": 2018}],
+    "cited_sources": [
+        {"title": "Arte Rupestre Boyacá", "author": "ICANH", "year": 2018}
+    ],
     "interpretation_confidence": 0.85,
     "requires_human_review": False,
     "reconstructed_image": "data/samples/test_pictogram.jpg",
@@ -29,11 +33,13 @@ MOCK_FULL_STATE = {
     "reconstruction_applied": False,
 }
 
+
 def test_genera_record_id():
     """Debe generar un record_id único no vacío."""
     result = documenter_node(MOCK_FULL_STATE)
     assert "record_id" in result
     assert result["record_id"]
+
 
 def test_genera_ficha_json():
     """El JSON de la ficha debe contener los campos obligatorios ICANH."""
@@ -44,6 +50,7 @@ def test_genera_ficha_json():
     assert "cited_sources" in ficha
     assert "motif_count" in ficha
     assert "generated_at" in ficha
+
 
 def test_dos_ejecuciones_generan_ids_distintos():
     """Cada ejecución debe generar un record_id diferente."""

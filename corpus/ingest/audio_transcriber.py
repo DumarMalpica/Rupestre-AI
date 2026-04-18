@@ -27,8 +27,7 @@ def transcribe(audio_path: str, model_size: str = "medium") -> dict:
         segments, info = model.transcribe(audio_path, language="es")
 
         segments_list = [
-            {"start": s.start, "end": s.end, "text": s.text}
-            for s in segments
+            {"start": s.start, "end": s.end, "text": s.text} for s in segments
         ]
         full_text = " ".join(s["text"].strip() for s in segments_list)
 
@@ -45,7 +44,9 @@ def transcribe(audio_path: str, model_size: str = "medium") -> dict:
         }
 
     except ImportError:
-        logger.warning("faster-whisper no instalado. Instalar con: pip install faster-whisper")
+        logger.warning(
+            "faster-whisper no instalado. Instalar con: pip install faster-whisper"
+        )
         return {}
     except Exception as e:
         logger.error(f"Error transcribiendo {audio_path}: {e}")

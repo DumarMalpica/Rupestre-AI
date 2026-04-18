@@ -17,10 +17,16 @@ MOCK_STATE_FOR_RECON = {
     "enhanced_image": "data/samples/test_pictogram.jpg",
     "image_quality_ok": True,
     "detected_motifs": [
-        {"id": "motif_001", "clase": "espiral", "confidence": 0.91, "bbox": [100, 150, 300, 350]}
+        {
+            "id": "motif_001",
+            "clase": "espiral",
+            "confidence": 0.91,
+            "bbox": [100, 150, 300, 350],
+        }
     ],
     "motif_count": 1,
 }
+
 
 def test_retorna_imagen_reconstruida():
     """Debe retornar una ruta de imagen reconstruida (puede ser la original)."""
@@ -28,11 +34,13 @@ def test_retorna_imagen_reconstruida():
     assert "reconstructed_image" in result
     assert result["reconstructed_image"] is not None
 
+
 def test_retorna_flag_reconstruction_applied():
     """Debe indicar si se aplicó reconstrucción GAN o no."""
     result = reconstructor_node(MOCK_STATE_FOR_RECON)
     assert "reconstruction_applied" in result
     assert isinstance(result["reconstruction_applied"], bool)
+
 
 def test_sin_modelo_gan_no_rompe_pipeline():
     """Sin pesos GAN disponibles, debe retornar imagen original sin error."""

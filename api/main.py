@@ -34,4 +34,7 @@ def health():
 if __name__ == "__main__":
     import uvicorn
     from core.config import settings
-    uvicorn.run("api.main:app", host=settings.api_host, port=settings.api_port, reload=True)
+
+    uvicorn.run(
+        "api.main:app", host=settings.api_host, port=settings.api_port, reload=True
+    )

@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     langfuse_host: str = "https://cloud.langfuse.com"
 
     # ── LLM ───────────────────────────────────────────────────
-    llm_provider: str = "ollama"          # ollama | openai | mock
+    llm_provider: str = "ollama"  # ollama | openai | mock
     openai_api_key: str = ""
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.3"

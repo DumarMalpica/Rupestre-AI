@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class AnalysisResponse(BaseModel):
     session_id: str
-    status: str                          # pending | processing | done | error
+    status: str  # pending | processing | done | error
     record_id: Optional[str] = None
     message: str = ""
 

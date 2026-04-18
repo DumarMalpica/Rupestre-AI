@@ -11,6 +11,7 @@ from core.logger import get_logger
 
 logger = get_logger("scripts.ingest")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Ingesta del corpus rupestre")
     parser.add_argument("--source", default="./data/icanh_docs/")
@@ -30,6 +31,7 @@ def main():
     indexed = index_chunks(chunks)
     print(f"   {indexed} chunks indexados exitosamente")
     print("\n✅ Ingesta completada")
+
 
 if __name__ == "__main__":
     main()

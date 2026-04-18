@@ -43,6 +43,7 @@ def get_tracer():
 
     try:
         from langfuse import Langfuse
+
         _langfuse_client = Langfuse(
             public_key=settings.langfuse_public_key,
             secret_key=settings.langfuse_secret_key,

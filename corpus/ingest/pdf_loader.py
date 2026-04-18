@@ -22,17 +22,19 @@ def load_pdf(path: str) -> list[dict]:
         for i, page in enumerate(doc):
             text = page.get_text()
             if text.strip():
-                pages.append({
-                    "text": text,
-                    "page": i + 1,
-                    "source": Path(path).name,
-                    "metadata": {
-                        "source_type": "pdf",
-                        "file": path,
+                pages.append(
+                    {
+                        "text": text,
                         "page": i + 1,
-                        "total_pages": len(doc),
-                    },
-                })
+                        "source": Path(path).name,
+                        "metadata": {
+                            "source_type": "pdf",
+                            "file": path,
+                            "page": i + 1,
+                            "total_pages": len(doc),
+                        },
+                    }
+                )
         logger.info(f"PDF cargado: {path} — {len(pages)} páginas con texto")
         return pages
 

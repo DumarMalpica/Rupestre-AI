@@ -15,14 +15,23 @@ MOCK_STATE = {
 MOCK_STATE_WITH_CONTEXT = {
     **MOCK_STATE,
     "detected_motifs": [
-        {"id": "motif_001", "clase": "espiral", "confidence": 0.91, "bbox": [100, 150, 300, 350]}
+        {
+            "id": "motif_001",
+            "clase": "espiral",
+            "confidence": 0.91,
+            "bbox": [100, 150, 300, 350],
+        }
     ],
     "motif_count": 1,
     "similar_motifs": [
-        {"motif_id": "motif_001", "top_matches": [{"site": "Villa de Leyva", "score": 0.88}]}
+        {
+            "motif_id": "motif_001",
+            "top_matches": [{"site": "Villa de Leyva", "score": 0.88}],
+        }
     ],
     "has_regional_parallels": True,
 }
+
 
 def test_genera_interpretacion_no_vacia():
     """La interpretación cultural generada no debe ser vacía."""
@@ -31,17 +40,20 @@ def test_genera_interpretacion_no_vacia():
     assert result["cultural_interpretation"]
     assert len(result["cultural_interpretation"]) > 10
 
+
 def test_retorna_fuentes_citadas():
     """Debe retornar al menos una fuente citada."""
     result = cultural_analyst_node(MOCK_STATE_WITH_CONTEXT)
     assert "cited_sources" in result
     assert isinstance(result["cited_sources"], list)
 
+
 def test_confidence_es_float():
     """interpretation_confidence debe ser un float entre 0 y 1."""
     result = cultural_analyst_node(MOCK_STATE_WITH_CONTEXT)
     assert "interpretation_confidence" in result
     assert 0.0 <= result["interpretation_confidence"] <= 1.0
+
 
 def test_hitl_flag_presente():
     """El flag requires_human_review siempre debe estar presente."""

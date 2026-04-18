@@ -31,14 +31,16 @@ def chunk_documents(documents: list[dict]) -> list[dict]:
         for doc in documents:
             texts = splitter.split_text(doc["text"])
             for i, text in enumerate(texts):
-                chunks.append({
-                    "text": text,
-                    "metadata": {
-                        **doc.get("metadata", {}),
-                        "chunk_index": i,
-                        "total_chunks": len(texts),
-                    },
-                })
+                chunks.append(
+                    {
+                        "text": text,
+                        "metadata": {
+                            **doc.get("metadata", {}),
+                            "chunk_index": i,
+                            "total_chunks": len(texts),
+                        },
+                    }
+                )
 
         logger.info(f"{len(documents)} documentos → {len(chunks)} chunks")
         return chunks

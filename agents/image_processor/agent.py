@@ -19,15 +19,17 @@ def image_processor_node(state: RupestreState) -> dict:
     image_path = state["image_path"]
     logger.info(f"Procesando imagen: {image_path}")
 
-    with tracer.trace(name="image_processor", metadata={"site": state.get("site_name")}):
+    with tracer.trace(
+        name="image_processor", metadata={"site": state.get("site_name")}
+    ):
         try:
             # TODO: implementar tools/enhancer.py y tools/quality.py
             # enhanced = enhancer.apply_dstretch(image_path)
             # quality_ok = quality.evaluate(enhanced)
 
             # ── PLACEHOLDER ───────────────────────────────────
-            enhanced_image = image_path   # sin procesamiento aún
-            image_quality_ok = True       # siempre válida por ahora
+            enhanced_image = image_path  # sin procesamiento aún
+            image_quality_ok = True  # siempre válida por ahora
             # ─────────────────────────────────────────────────
 
             logger.info(f"Imagen procesada. Calidad OK: {image_quality_ok}")

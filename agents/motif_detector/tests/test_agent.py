@@ -18,16 +18,19 @@ MOCK_STATE_WITH_IMAGE = {
     "image_quality_ok": True,
 }
 
+
 def test_retorna_lista_de_motivos():
     """El agente debe retornar una lista (puede estar vacía)."""
     result = motif_detector_node(MOCK_STATE_WITH_IMAGE)
     assert "detected_motifs" in result
     assert isinstance(result["detected_motifs"], list)
 
+
 def test_motif_count_coincide_con_lista():
     """motif_count debe ser igual a len(detected_motifs)."""
     result = motif_detector_node(MOCK_STATE_WITH_IMAGE)
     assert result["motif_count"] == len(result["detected_motifs"])
+
 
 def test_cada_motivo_tiene_campos_requeridos():
     """Cada motivo detectado debe tener id, clase, confidence y bbox."""
@@ -37,6 +40,7 @@ def test_cada_motivo_tiene_campos_requeridos():
         assert "clase" in motif
         assert "confidence" in motif
         assert "bbox" in motif
+
 
 def test_confidence_en_rango_valido():
     """El confidence de cada motivo debe estar entre 0 y 1."""

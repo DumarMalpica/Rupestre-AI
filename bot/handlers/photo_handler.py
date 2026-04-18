@@ -52,7 +52,9 @@ async def handle_coordinates(message: Message, state: FSMContext):
     try:
         lat, lon = [float(x.strip()) for x in message.text.split(",")]
     except ValueError:
-        await message.reply("⚠️ Formato inválido. Envía: `latitud, longitud`", parse_mode="Markdown")
+        await message.reply(
+            "⚠️ Formato inválido. Envía: `latitud, longitud`", parse_mode="Markdown"
+        )
         return
 
     data = await state.get_data()

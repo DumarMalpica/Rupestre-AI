@@ -15,11 +15,13 @@ MOCK_INITIAL_STATE = {
     "errors": [],
 }
 
+
 @pytest.mark.integration
 def test_grafo_completa_sin_errores():
     """El grafo debe ejecutarse de inicio a fin sin excepciones."""
     result = rupestre_graph.invoke(MOCK_INITIAL_STATE)
     assert result is not None
+
 
 @pytest.mark.integration
 def test_grafo_genera_ficha_json():
@@ -30,6 +32,7 @@ def test_grafo_genera_ficha_json():
     assert "site_name" in ficha
     assert "record_id" in ficha
     assert "cultural_interpretation" in ficha
+
 
 @pytest.mark.integration
 def test_grafo_detiene_imagen_invalida():

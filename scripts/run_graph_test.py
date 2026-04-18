@@ -8,6 +8,7 @@ import json
 import time
 from core.graph import rupestre_graph
 
+
 def main():
     parser = argparse.ArgumentParser(description="Test del grafo LangGraph")
     parser.add_argument("--image", default="data/samples/test_pictogram.jpg")
@@ -41,6 +42,7 @@ def main():
     if result.get("ficha_json"):
         print("\n📋 Ficha JSON:")
         print(json.dumps(result["ficha_json"], indent=2, ensure_ascii=False))
+
 
 if __name__ == "__main__":
     main()

@@ -29,8 +29,8 @@ def reconstructor_node(state: RupestreState) -> dict:
             #     confidence = confidence.generate_map(result)
 
             # ── PLACEHOLDER ───────────────────────────────────
-            reconstruction_applied = False   # sin GAN entrenado aún
-            reconstructed_image = image      # imagen original sin cambios
+            reconstruction_applied = False  # sin GAN entrenado aún
+            reconstructed_image = image  # imagen original sin cambios
             confidence_map = None
             # ─────────────────────────────────────────────────
 
