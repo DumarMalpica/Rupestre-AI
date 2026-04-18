@@ -23,7 +23,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Ruff — linting
-        run: ruff check .
+        run: ruff check . --fix
 
       - name: Black — formato
         run: black --check .

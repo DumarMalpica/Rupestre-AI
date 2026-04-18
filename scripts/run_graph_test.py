@@ -22,7 +22,7 @@ def main():
         "errors": [],
     }
 
-    print(f"\n🪨 Rupestre AI — Test del Grafo")
+    print("\n🪨 Rupestre AI — Test del Grafo")
     print(f"   Imagen: {args.image}")
     print(f"   Sitio:  {args.site}")
     print("-" * 50)

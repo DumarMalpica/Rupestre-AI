@@ -3,7 +3,7 @@
 import uuid
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from api.schemas.request import AnalysisRequest
-from api.schemas.response import AnalysisResponse
+from api.schemas.response import AnalysisResponse, RecordResponse
 from core.logger import get_logger
 
 logger = get_logger("api.analysis")
