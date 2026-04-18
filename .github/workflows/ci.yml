@@ -1,0 +1,122 @@
+name: CI — Tests y Linting
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    name: Lint y Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias de desarrollo
+        run: |
+          pip install -r requirements-dev.txt
+
+      - name: Ruff — linting
+        run: ruff check .
+
+      - name: Black — formato
+        run: black --check .
+
+      - name: Mypy — type checking
+        run: mypy core/ agents/ api/ --ignore-missing-imports
+
+  test-agents:
+    name: Tests de Agentes (independientes)
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt
+
+      - name: Crear .env de prueba
+        run: |
+          cp .env.example .env
+          echo "LANGFUSE_PUBLIC_KEY=pk-test" >> .env
+          echo "LANGFUSE_SECRET_KEY=sk-test" >> .env
+          echo "CHROMA_PATH=./data/chroma_test" >> .env
+          echo "LLM_PROVIDER=mock" >> .env
+
+      - name: Tests — AG1 Image Processor
+        run: pytest agents/image_processor/tests/ -v --cov=agents/image_processor
+
+      - name: Tests — AG2 Motif Detector
+        run: pytest agents/motif_detector/tests/ -v --cov=agents/motif_detector
+
+      - name: Tests — AG3 Iconographic Comparator
+        run: pytest agents/iconographic_comparator/tests/ -v --cov=agents/iconographic_comparator
+
+      - name: Tests — AG4 Cultural Analyst
+        run: pytest agents/cultural_analyst/tests/ -v --cov=agents/cultural_analyst
+
+      - name: Tests — AG5 Reconstructor
+        run: pytest agents/reconstructor/tests/ -v --cov=agents/reconstructor
+
+      - name: Tests — AG6 Heritage Documenter
+        run: pytest agents/heritage_documenter/tests/ -v --cov=agents/heritage_documenter
+
+      - name: Reporte de cobertura
+        run: pytest agents/ --cov=agents --cov-report=xml --cov-fail-under=60
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.xml
+        continue-on-error: true
+
+  test-core:
+    name: Tests del Core y API
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt
+
+      - name: Crear .env de prueba
+        run: |
+          cp .env.example .env
+          echo "LLM_PROVIDER=mock" >> .env
+
+      - name: Tests — Core
+        run: pytest tests/ -v -k "not integration"
+
+  notify-failure:
+    name: Notificar fallo
+    runs-on: ubuntu-latest
+    needs: [lint, test-agents, test-core]
+    if: failure()
+    steps:
+      - name: PR bloqueado
+        run: |
+          echo "❌ CI falló. El PR no puede hacerse merge hasta que todos los tests pasen."
+          exit 1

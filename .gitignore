@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Entorno
+.env
+
+# Datos y modelos grandes — versionar con DVC
+data/chroma/
+data/icanh_docs/
+models/deepfillv2/*.pth
+models/yolov11/*.pt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

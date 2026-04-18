@@ -1,0 +1,1 @@
+"""Cliente ChromaDB e indexación."""
