@@ -44,5 +44,5 @@ def image_processor_node(state: RupestreState) -> dict:
             logger.error(f"Error en image_processor: {e}")
             return {
                 "image_quality_ok": False,
-                "errors": state.get("errors", []) + [str(e)],
+                "errors": (state.get("errors") or []) + [str(e)],
             }

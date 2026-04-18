@@ -36,7 +36,7 @@ def _route_after_cultural_analyst(state: RupestreState) -> str:
     return "reconstructor"
 
 
-def build_graph() -> StateGraph:
+def build_graph():
     """Construye y compila el grafo LangGraph del sistema."""
     graph = StateGraph(RupestreState)
 

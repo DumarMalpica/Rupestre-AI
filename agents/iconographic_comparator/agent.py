@@ -1,8 +1,8 @@
 """AG3 — Iconographic Comparator | Dev 2"""
 
-from core.state import RupestreState
-from core.logger import get_tracer, get_logger
 from core.exceptions import AgentExecutionError
+from core.logger import get_logger, get_tracer
+from core.state import RupestreState
 
 logger = get_logger("iconographic_comparator")
 
@@ -16,7 +16,7 @@ def comparator_node(state: RupestreState) -> dict:
     Escribe: similar_motifs, has_regional_parallels
     """
     tracer = get_tracer()
-    motifs = state.get("detected_motifs", [])
+    motifs = state.get("detected_motifs") or []
     logger.info(f"Comparando {len(motifs)} motivo(s) con inventario regional")
 
     with tracer.trace(name="iconographic_comparator"):
@@ -40,9 +40,9 @@ def comparator_node(state: RupestreState) -> dict:
                 }
             ]
             has_regional_parallels = any(
-                m["top_matches"][0]["score"] > 0.75
+                match["score"] > 0.75
                 for m in similar_motifs
-                if m.get("top_matches")
+                for match in (m.get("top_matches") or [])
             )
             # ─────────────────────────────────────────────────
 
