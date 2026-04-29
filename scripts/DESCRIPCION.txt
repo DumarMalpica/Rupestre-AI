@@ -1,0 +1,34 @@
+CARPETA: scripts/
+═══════════════════════════════════════════════════════════════
+
+RESPONSABLE: Compartido
+
+PROPÓSITO
+─────────
+Scripts de utilidad para operaciones frecuentes del proyecto.
+No son parte del código de producción pero son esenciales para
+el flujo de trabajo diario.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+run_graph_test.py
+  FUNCIÓN: Probar el grafo completo desde la línea de comandos.
+  USO    : python scripts/run_graph_test.py --image ruta/foto.jpg
+  MUESTRA: Resultado de cada nodo + tiempo total de ejecución.
+  ÚTIL PARA: Verificar integración antes de hacer un PR a main.
+
+ingest_corpus.py
+  FUNCIÓN: Ejecutar el pipeline completo de ingesta del corpus.
+  USO    : python scripts/ingest_corpus.py --source ./data/icanh_docs/
+  PROCESO: Carga PDFs → segmenta en chunks → indexa en ChromaDB.
+  CUÁNDO : Antes de la primera ejecución y al agregar nuevas fuentes.
+
+setup_env.sh  ← PENDIENTE CREAR
+  FUNCIÓN: Configurar el entorno de desarrollo de un nuevo dev.
+  TAREAS :
+    - Instalar dependencias Python
+    - Descargar pesos preentrenados de DeepFillv2 y YOLOv11
+    - Instalar modelo Ollama (Llama 3.3)
+    - Crear directorios de datos necesarios
+  USO    : bash scripts/setup_env.sh

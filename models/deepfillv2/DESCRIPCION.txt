@@ -1,0 +1,35 @@
+CARPETA: models/deepfillv2/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Pesos y configuración del modelo GAN DeepFillv2 usado por
+AG5 Reconstructor para rellenar zonas deterioradas.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+config.yaml
+  Hiperparámetros del modelo:
+    - Arquitectura del generador y discriminador
+    - Número de canales de entrada (3 = RGB, 4 = RGB + NIR)
+    - Tamaño de imagen de entrada para inferencia
+    - Parámetros de inferencia (temperatura, iteraciones)
+
+README.md
+  Instrucciones para:
+    1. Descargar pesos preentrenados desde GitHub:
+       github.com/nipponjo/deepfillv2-pytorch
+    2. Probar con imágenes de muestra sin entrenar nada
+    3. Ejecutar el fine-tuning con el corpus rupestre
+    4. Interpretar el mapa de confianza del output
+
+*.pth  ← NO en Git, usar DVC
+  Pesos del modelo. Dos versiones posibles:
+    - Preentrenados (descargar con setup_env.sh)
+    - Fine-tuned sobre corpus rupestre (generar con entrenamiento)
+
+CÓMO LO USA EL SISTEMA
+───────────────────────
+AG5 Reconstructor → tools/inpainter.py → carga config.yaml
+y los pesos .pth para ejecutar la inferencia de inpainting.

@@ -1,0 +1,72 @@
+CARPETA: agents/motif_detector/
+═══════════════════════════════════════════════════════════════
+
+AGENTE: AG2 — Motif Detector
+RESPONSABLE: Dev 1
+POSICIÓN EN EL GRAFO: Nodo 2
+
+─────────────────────────────────────────────────────────────
+QUÉ HACE
+─────────────────────────────────────────────────────────────
+Actúa como el ojo analítico sobre la imagen ya limpia.
+Detecta cada figura, símbolo o elemento iconográfico discreto
+presente en el pictograma: espirales, figuras antropomorfas,
+figuras zoomorfas, líneas geométricas, cúpulas, figuras solares.
+
+Proceso en dos pasos:
+1. YOLOv11 localiza cada motivo con un rectángulo (bbox)
+2. SAM2 traza la silueta exacta de cada motivo (máscara)
+
+─────────────────────────────────────────────────────────────
+QUÉ RECIBE DEL ESTADO (INPUTS)
+─────────────────────────────────────────────────────────────
+  enhanced_image (str): imagen procesada por AG1
+
+─────────────────────────────────────────────────────────────
+QUÉ ENTREGA AL ESTADO (OUTPUTS)
+─────────────────────────────────────────────────────────────
+  detected_motifs (list): lista de dicts, uno por motivo.
+    Cada dict contiene:
+      id          (str)  : identificador único del motivo
+      clase       (str)  : tipo de motivo (espiral, antropomorfo...)
+      confidence  (float): nivel de confianza entre 0 y 1
+      bbox        (list) : [x1, y1, x2, y2] en píxeles
+      crop_path   (str)  : ruta al recorte del motivo
+      mask        (array): máscara de segmentación numpy
+
+  motif_count (int): número total de motivos detectados
+
+─────────────────────────────────────────────────────────────
+VALOR MOCKEADO ACTUAL
+─────────────────────────────────────────────────────────────
+  detected_motifs = [un motivo hardcodeado tipo espiral
+                     con confidence 0.91 y bbox ejemplo]
+  motif_count = 1
+
+─────────────────────────────────────────────────────────────
+IMPLEMENTACIÓN REAL ESPERADA (tools/)
+─────────────────────────────────────────────────────────────
+  yolo_detector.py
+    Cargar YOLOv11 fine-tuned desde models/yolov11/
+    Ejecutar inferencia y retornar bboxes con confidence.
+    Clases: espiral, figura_antropomorfa, figura_zoomorfa,
+            linea_geometrica, punto_cupula, figura_solar.
+
+  sam_segmenter.py
+    Usar SAM2 con los bboxes de YOLO como prompts.
+    Generar máscara binaria de la silueta exacta.
+    Zero-shot: no requiere reentrenamiento.
+
+  annotator.py
+    Generar imagen de visualización con motivos marcados.
+    Útil para debugging y para incluir en la ficha ICANH.
+
+─────────────────────────────────────────────────────────────
+TESTS INDEPENDIENTES (tests/)
+─────────────────────────────────────────────────────────────
+Casos a cubrir:
+  ✓ Retorna una lista (puede estar vacía)
+  ✓ motif_count == len(detected_motifs)
+  ✓ Cada motivo tiene id, clase, confidence y bbox
+  ✓ confidence está entre 0.0 y 1.0
+  ✓ Sin imagen no lanza excepción no controlada

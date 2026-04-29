@@ -1,0 +1,40 @@
+CARPETA: agents/image_processor/tools/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Herramientas específicas del AG1. Cada archivo es independiente
+y puede desarrollarse y probarse por separado.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+enhancer.py
+  FUNCIÓN: Realzar pigmentos rupestres desvanecidos.
+  ENTRADA: Ruta a la imagen original.
+  SALIDA : Ruta a la imagen realzada guardada en disco.
+  TÉCNICA: Algoritmo DStretch (decorrelation stretch) que
+           trabaja en múltiples espacios de color (YBK, YDS,
+           LDS) para maximizar el contraste de los pigmentos.
+           Si la cámara capturó canal NIR, agregarlo como
+           cuarto canal del tensor.
+  LIBRERÍAS: opencv-python, imageio, numpy
+
+corrector.py
+  FUNCIÓN: Corregir distorsión geométrica de perspectiva.
+  ENTRADA: Ruta a la imagen (original o realzada).
+  SALIDA : Ruta a la imagen corregida guardada en disco.
+  TÉCNICA: Detectar contornos de la roca o marco de referencia
+           con OpenCV, calcular la transformación de homografía
+           y rectificar a vista frontal plana.
+  LIBRERÍAS: opencv-python, numpy
+
+quality.py
+  FUNCIÓN: Evaluar si la imagen tiene calidad suficiente.
+  ENTRADA: Imagen como array numpy o ruta al archivo.
+  SALIDA : Tupla (bool, str) → pasa/no pasa + motivo.
+  CRITERIOS:
+    - Resolución mínima: ancho × alto > 1,000,000 píxeles
+    - Desenfoque: varianza del Laplaciano > umbral mínimo
+    - Sobreexposición: < 5% de píxeles saturados
+  LIBRERÍAS: opencv-python, numpy

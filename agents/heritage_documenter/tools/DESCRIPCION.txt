@@ -1,0 +1,32 @@
+CARPETA: agents/heritage_documenter/tools/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+json_builder.py
+  FUNCIÓN: Construir el diccionario de la ficha ICANH.
+  ENTRADA: Estado completo del sistema.
+  SALIDA : Dict Python validado con todos los campos ICANH.
+  CAMPOS : record_id, generated_at, site_name, coordinates,
+           motif_count, detected_motifs, similar_motifs,
+           has_regional_parallels, cultural_interpretation,
+           cited_sources, reconstruction_applied,
+           images (original, enhanced, reconstructed).
+  LIBRERÍAS: pydantic, datetime, uuid
+
+template_engine.py
+  FUNCIÓN: Renderizar el template HTML de la ficha.
+  ENTRADA: Dict de la ficha + ruta al template HTML.
+  SALIDA : String con el HTML renderizado y completo.
+  MOTOR  : Jinja2 — variables {{ campo }} y bucles {% for %}.
+  LIBRERÍAS: jinja2, pathlib
+
+pdf_generator.py
+  FUNCIÓN: Convertir HTML a PDF profesional.
+  ENTRADA: HTML renderizado + record_id para el nombre.
+  SALIDA : Ruta al archivo PDF guardado en data/fichas/
+  FORMATO: A4, con márgenes estándar de documento oficial.
+           Encabezado con logo institucional, pie con número
+           de página, fecha y sello del sistema.
+  LIBRERÍAS: weasyprint, pathlib

@@ -1,0 +1,25 @@
+CARPETA: docs/agents/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Especificación funcional de cada agente. Actúa como contrato de
+comportamiento ANTES de escribir el código.
+
+REGLA DE ACTUALIZACIÓN
+──────────────────────
+Si un agente cambia su output:
+  1. Primero actualizar el .md en esta carpeta
+  2. Luego actualizar core/state.py
+  3. Luego actualizar el código del agente
+  4. Luego actualizar los tests
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+image_processor.md   → AG1: inputs, outputs, criterios de calidad
+motif_detector.md    → AG2: clases YOLO, formato de detecciones
+comparator.md        → AG3: cómo rankea similitud iconográfica
+cultural_analyst.md  → AG4: estructura del prompt RAG, HITL
+reconstructor.md     → AG5: formato del mapa de confianza GAN
+documenter.md        → AG6: campos obligatorios ficha ICANH

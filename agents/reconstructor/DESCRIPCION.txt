@@ -1,0 +1,71 @@
+CARPETA: agents/reconstructor/
+═══════════════════════════════════════════════════════════════
+
+AGENTE: AG5 — Reconstructor
+RESPONSABLE: Dev 1
+POSICIÓN EN EL GRAFO: Nodo 5
+
+─────────────────────────────────────────────────────────────
+QUÉ HACE
+─────────────────────────────────────────────────────────────
+El restaurador digital. Detecta las zonas deterioradas de la
+imagen (por erosión, líquenes o vandalismo), genera una máscara
+de esas zonas y le pide al modelo GAN DeepFillv2 que las
+reconstruya coherentemente con el estilo del pictograma.
+
+DeepFillv2 usa dos mecanismos clave:
+  - Gated convolution: distingue píxeles reales de dañados
+  - Contextual attention: busca texturas similares en la misma
+    imagen para usarlas como referencia al reconstruir
+
+NOTA: Si los pesos del GAN no están disponibles todavía,
+retorna la imagen original sin modificar. El pipeline continúa
+normalmente sin bloquear el desarrollo.
+
+─────────────────────────────────────────────────────────────
+QUÉ RECIBE DEL ESTADO (INPUTS)
+─────────────────────────────────────────────────────────────
+  enhanced_image  (str) : imagen realzada por AG1
+  detected_motifs (list): motivos detectados por AG2
+                          (para NO reconstruir lo que ya existe)
+
+─────────────────────────────────────────────────────────────
+QUÉ ENTREGA AL ESTADO (OUTPUTS)
+─────────────────────────────────────────────────────────────
+  reconstructed_image    (str)  : ruta a imagen restaurada
+  confidence_map         (str)  : ruta al mapa de calor o None
+  reconstruction_applied (bool) : True si se aplicó el GAN
+
+─────────────────────────────────────────────────────────────
+VALOR MOCKEADO ACTUAL
+─────────────────────────────────────────────────────────────
+  reconstructed_image    = misma ruta que enhanced_image
+  confidence_map         = None
+  reconstruction_applied = False (sin GAN entrenado aún)
+
+─────────────────────────────────────────────────────────────
+IMPLEMENTACIÓN REAL ESPERADA (tools/)
+─────────────────────────────────────────────────────────────
+  mask_generator.py
+    Detectar zonas deterioradas automáticamente por análisis
+    de textura. Comparar varianza local en ventanas deslizantes.
+    También aceptar máscaras manuales del arqueólogo.
+
+  inpainter.py
+    Cargar DeepFillv2 desde models/deepfillv2/
+    Ejecutar inferencia de inpainting sobre imagen + máscara.
+    Usar pesos fine-tuned si existen, preentrenados si no.
+
+  confidence.py
+    Generar mapa de calor: cada píxel reconstruido tiene un
+    valor entre 0 y 1 indicando la certeza del modelo.
+    Exportar como TIFF float32.
+
+─────────────────────────────────────────────────────────────
+TESTS INDEPENDIENTES (tests/)
+─────────────────────────────────────────────────────────────
+Casos a cubrir:
+  ✓ Retorna reconstructed_image no nulo
+  ✓ reconstruction_applied es bool
+  ✓ Sin pesos GAN no lanza excepción (retorna imagen original)
+  ✓ Si no hay deterioro, reconstruction_applied es False

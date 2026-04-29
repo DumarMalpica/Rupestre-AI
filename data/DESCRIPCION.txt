@@ -1,0 +1,33 @@
+CARPETA: data/
+═══════════════════════════════════════════════════════════════
+
+IMPORTANTE: ESTA CARPETA ESTÁ EN .gitignore
+─────────────────────────────────────────────
+Los datasets grandes se versionan con DVC, no con Git.
+
+SUBCARPETAS
+───────────
+
+chroma/
+  Base de datos vectorial ChromaDB persistente.
+  Se genera ejecutando: python scripts/ingest_corpus.py
+  No se sube a Git ni a GitHub.
+
+icanh_docs/
+  Documentos fuente para el corpus:
+    - PDFs del ICANH
+    - Tesis UPTC
+    - Fichas escaneadas
+    - Archivos de audio de entrevistas
+  Colocar aquí los documentos antes de ejecutar ingest_corpus.py.
+
+samples/
+  Imágenes de muestra para pruebas y desarrollo.
+  ESTAS SÍ se pueden subir a Git si son pequeñas (< 5MB).
+  Incluir al menos una imagen real de un sitio rupestre
+  colombiano de dominio público para que ambos desarrolladores
+  puedan probar sus agentes desde el primer día.
+
+fichas/
+  PDFs de fichas ICANH generadas por AG6 Heritage Documenter.
+  Se crean automáticamente durante la ejecución del pipeline.

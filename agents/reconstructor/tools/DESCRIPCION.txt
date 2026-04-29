@@ -1,0 +1,35 @@
+CARPETA: agents/reconstructor/tools/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+mask_generator.py
+  FUNCIÓN: Detectar zonas deterioradas de la imagen.
+  ENTRADA: Imagen realzada + lista de motivos detectados.
+  SALIDA : Máscara binaria numpy (1=deteriorado, 0=válido).
+  LÓGICA : Análisis de varianza local de textura en ventanas
+           deslizantes. Zonas con valores anómalos = dañadas.
+           Los motivos detectados por AG2 se protegen siempre.
+  LIBRERÍAS: opencv-python, scikit-image, numpy
+
+inpainter.py
+  FUNCIÓN: Reconstruir zonas deterioradas con DeepFillv2.
+  ENTRADA: Imagen realzada + máscara binaria.
+  SALIDA : Imagen numpy con zonas reconstruidas.
+  MODELO : DeepFillv2 desde models/deepfillv2/
+           Usa pesos fine-tuned si existen, preentrenados si no.
+  MECANISMOS:
+    - Gated convolution → distingue válido de inválido
+    - Contextual attention → busca texturas de referencia
+  LIBRERÍAS: torch, torchvision, numpy, Pillow
+
+confidence.py
+  FUNCIÓN: Generar mapa de confianza de la reconstrucción.
+  ENTRADA: Imagen original, imagen reconstruida y máscara.
+  SALIDA : Array numpy float32 guardado como TIFF.
+           Valores cercanos a 1 = reconstrucción confiable.
+           Valores cercanos a 0 = reconstrucción especulativa.
+  USO    : Se incluye en la ficha ICANH para que el arqueólogo
+           sepa qué partes son certeras y cuáles tentativas.
+  LIBRERÍAS: numpy, torch, imageio

@@ -1,0 +1,45 @@
+CARPETA: bot/
+═══════════════════════════════════════════════════════════════
+
+RESPONSABLE: Dev 2
+
+PROPÓSITO
+─────────
+Bot de Telegram para arqueólogos en campo. Permite enviar una
+fotografía desde el celular y recibir la ficha ICANH en PDF
+en cuestión de minutos, sin conocer nada del sistema interno.
+
+FLUJO COMPLETO DE UNA SESIÓN
+──────────────────────────────
+  1. Arqueólogo envía una fotografía al bot
+  2. Bot pide el nombre del sitio rupestre
+  3. Bot pide las coordenadas GPS (formato: lat, lon)
+  4. Bot confirma "procesando..." y llama a POST /api/analyze
+  5. Cuando el pipeline termina, bot envía la ficha PDF
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+main.py
+  Inicializa el bot con aiogram y el token de Telegram.
+  Registra los routers de handlers.
+  Arranca el polling para recibir mensajes.
+
+fsm/states.py
+  Máquina de estados de la conversación (aiogram FSM):
+    waiting_photo      → esperando fotografía del sitio
+    waiting_site_name  → esperando nombre del sitio
+    waiting_coordinates→ esperando coordenadas GPS
+    processing         → pipeline corriendo (no acepta input)
+    done               → ficha entregada, conversación cerrada
+
+handlers/photo_handler.py
+  Tres handlers encadenados por el FSM:
+    handle_photo       → guarda file_id, pide nombre del sitio
+    handle_site_name   → guarda nombre, pide coordenadas
+    handle_coordinates → valida coords, llama a la API,
+                         notifica que está procesando
+
+handlers/record_handler.py  ← PENDIENTE IMPLEMENTAR
+  Cuando el pipeline termina, notifica al arqueólogo y envía
+  la ficha ICANH en PDF como documento de Telegram.

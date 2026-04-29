@@ -1,0 +1,51 @@
+CARPETA: api/
+═══════════════════════════════════════════════════════════════
+
+RESPONSABLE: Compartido (ambos desarrolladores)
+
+PROPÓSITO
+─────────
+Backend FastAPI unificado. Sirve como punto de entrada para:
+  - El bot de Telegram (Capa 4 — campo)
+  - La plataforma web pública Next.js (Capa 4 — público)
+
+Cualquier mejora a los modelos se refleja automáticamente en
+ambos canales sin cambios adicionales en este módulo.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+main.py
+  Inicializa la app FastAPI con título, descripción y versión.
+  Configura CORS para el frontend Next.js.
+  Registra los routers.
+  Expone /api/docs (Swagger UI) y /api/redoc.
+  Endpoint /health para health checks del servidor.
+
+routers/analysis.py
+  POST /api/analyze
+    Recibe: imagen (UploadFile) + metadatos del sitio (Form).
+    Genera un session_id único.
+    Debería encolar la tarea en Celery (pendiente implementar).
+    Retorna: session_id y status 'pending'.
+
+  GET /api/records/{record_id}
+    Consulta la ficha ICANH generada en PostgreSQL.
+    Retorna: ficha completa en JSON o 404 si no existe.
+
+schemas/request.py
+  Schema de entrada Pydantic:
+    site_name (str, obligatorio)
+    latitude  (float, validado -90 a 90)
+    longitude (float, validado -180 a 180)
+    notes     (str, opcional)
+
+schemas/response.py
+  Schemas de respuesta Pydantic:
+    AnalysisResponse → session_id, status, message
+    RecordResponse   → record_id, site_name, motif_count,
+                       cultural_interpretation, ficha_pdf_url
+
+middleware/auth.py  ← PENDIENTE IMPLEMENTAR
+  Autenticación JWT básica para proteger el endpoint /analyze.
+  Solo arqueólogos registrados pueden disparar el pipeline.

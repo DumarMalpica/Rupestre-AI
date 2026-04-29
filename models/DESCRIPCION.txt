@@ -1,0 +1,21 @@
+CARPETA: models/
+═══════════════════════════════════════════════════════════════
+
+RESPONSABLE: Dev 1
+
+PROPÓSITO
+─────────
+Almacena la configuración y los pesos de los modelos de machine
+learning usados por los agentes.
+
+IMPORTANTE — CONTROL DE VERSIONES
+──────────────────────────────────
+Los archivos de pesos (.pth, .pt) NO se suben a Git.
+Son demasiado pesados (varios GB) y se versionan con DVC.
+Se descargan ejecutando: bash scripts/setup_env.sh
+
+SUBCARPETAS
+───────────
+
+deepfillv2/   → modelo GAN para reconstrucción de pictogramas
+yolov11/      → modelo de detección de motivos rupestres

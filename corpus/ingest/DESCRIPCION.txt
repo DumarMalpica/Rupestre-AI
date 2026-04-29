@@ -1,0 +1,33 @@
+CARPETA: corpus/ingest/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Cargadores especializados por tipo de fuente documental.
+Cada archivo sabe cómo leer un formato específico y retorna
+siempre la misma estructura de datos normalizada.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+pdf_loader.py
+  FUNCIÓN: Extraer texto de publicaciones académicas PDF.
+  ENTRADA: Ruta a un PDF o a un directorio con PDFs.
+  SALIDA : Lista de dicts con: text, page, source, metadata.
+  LIBRERÍA: PyMuPDF (fitz)
+  MANEJA  : PDFs con texto embebido. PDFs escaneados sin capa
+            de texto requieren el flujo de OCR (ocr_loader.py).
+
+ocr_loader.py  ← PENDIENTE IMPLEMENTAR
+  FUNCIÓN: Transcribir fichas de campo escaneadas.
+  ENTRADA: Ruta a imagen de ficha o fotografía de calco.
+  SALIDA : Lista de dicts con: text, confidence, source, metadata.
+  LIBRERÍA: EasyOCR (soporta español)
+
+audio_transcriber.py
+  FUNCIÓN: Transcribir entrevistas de tradición oral.
+  ENTRADA: Ruta a archivo .mp3, .wav o .m4a + tamaño del modelo.
+  SALIDA : Dict con: text, language, segments, source, metadata.
+  LIBRERÍA: faster-whisper (modelo medium, detecta español)
+  NOTA   : Las transcripciones se tratan igual que documentos
+            de texto para el proceso de indexación en ChromaDB.
