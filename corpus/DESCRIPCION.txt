@@ -1,0 +1,43 @@
+CARPETA: corpus/
+═══════════════════════════════════════════════════════════════
+
+RESPONSABLE: Dev 2
+
+PROPÓSITO
+─────────
+Gestiona todo el ciclo de vida del corpus académico: desde la
+carga de documentos fuente hasta su almacenamiento como vectores
+en ChromaDB.
+
+Es la "biblioteca" que AG3 y AG4 consultan en tiempo real para
+encontrar paralelos iconográficos e interpretaciones culturales.
+
+CUÁNDO SE EJECUTA
+─────────────────
+Se ejecuta como proceso BATCH antes de que el sistema entre en
+producción, y se re-ejecuta cada vez que llegan nuevas fuentes.
+Comando: python scripts/ingest_corpus.py
+
+PIPELINE COMPLETO
+─────────────────
+  data/icanh_docs/ (documentos fuente)
+       │
+       ▼
+  corpus/ingest/     → carga por tipo de fuente
+       │
+       ▼
+  corpus/processing/ → limpieza y segmentación
+       │
+       ▼
+  corpus/vectorstore/ → embeddings e indexación en ChromaDB
+       │
+       ▼
+  data/chroma/       → vectores guardados en disco
+
+FUENTES DEL CORPUS
+──────────────────
+  - Publicaciones académicas del ICANH (PDF)
+  - Tesis e informes de investigación UPTC (PDF)
+  - Fichas de campo escaneadas (imagen con OCR)
+  - Entrevistas de tradición oral (audio MP3/WAV)
+  - Cartografía cultural y reportes arqueológicos (PDF)

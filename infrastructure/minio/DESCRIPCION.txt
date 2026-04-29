@@ -1,0 +1,19 @@
+CARPETA: infrastructure/minio/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+setup.sh
+  Script que crea los buckets iniciales en MinIO al arrancar.
+
+  BUCKETS DEL SISTEMA:
+    rupestre-originals   → imágenes originales del arqueólogo
+    rupestre-enhanced    → imágenes realzadas por AG1
+    rupestre-reconstructed → imágenes reconstruidas por AG5
+    rupestre-fichas      → PDFs de fichas ICANH generadas por AG6
+
+  POR QUÉ MINIO Y NO DISCO LOCAL:
+    MinIO es compatible con S3 de AWS. Si el proyecto escala
+    a la nube, solo se cambia el endpoint en .env sin tocar
+    el código de los agentes.

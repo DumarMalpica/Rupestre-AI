@@ -1,0 +1,28 @@
+CARPETA: docs/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Documentación técnica del proyecto. No es código, es conocimiento.
+Debe mantenerse actualizada a medida que el proyecto evoluciona.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+architecture.md
+  Diagrama completo del grafo LangGraph con todos los nodos,
+  aristas y condiciones de bifurcación.
+  REGLA: Actualizar cada vez que se modifica core/graph.py.
+
+state_contract.md
+  El documento más importante para trabajo en paralelo.
+  Describe cada campo del RupestreState:
+    - Nombre y tipo
+    - Quién lo escribe (agente)
+    - Quiénes lo leen (agentes)
+    - Valores válidos y formato esperado
+  REGLA: Actualizar antes de tocar core/state.py.
+
+agents/
+  Un archivo .md por agente con su especificación funcional.
+  (Ver docs/agents/DESCRIPCION.txt para más detalles)

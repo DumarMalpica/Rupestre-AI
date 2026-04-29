@@ -1,0 +1,22 @@
+CARPETA: agents/cultural_analyst/tests/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Tests unitarios del AG4. Corren sin el grafo completo y sin
+ChromaDB real gracias al llm_client en modo mock.
+
+El estado mock incluye detected_motifs y similar_motifs
+hardcodeados para simular los outputs de AG2 y AG3.
+
+CÓMO CORRER
+───────────
+  pytest agents/cultural_analyst/tests/ -v
+
+CASOS DE PRUEBA A CUBRIR
+─────────────────────────
+  ✓ Genera interpretación cultural no vacía
+  ✓ cited_sources es una lista
+  ✓ interpretation_confidence entre 0.0 y 1.0
+  ✓ requires_human_review siempre presente como bool
+  ✓ Si confidence < 0.6, requires_human_review es True

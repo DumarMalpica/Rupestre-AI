@@ -1,0 +1,27 @@
+CARPETA: agents/motif_detector/tools/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+yolo_detector.py
+  FUNCIÓN: Detectar motivos rupestres en la imagen.
+  ENTRADA: Ruta a la imagen realzada + umbral de confidence.
+  SALIDA : Lista de detecciones con bbox, confidence y clase.
+  MODELO : YOLOv11 fine-tuned sobre corpus rupestre anotado
+           en Roboflow. Pesos en models/yolov11/
+  LIBRERÍAS: ultralytics, torch, supervision
+
+sam_segmenter.py
+  FUNCIÓN: Generar máscaras de segmentación precisas.
+  ENTRADA: Imagen realzada + lista de bboxes de YOLO.
+  SALIDA : Lista de máscaras numpy (una por motivo).
+  MODELO : SAM2 de Meta AI — zero-shot, sin reentrenamiento.
+  LIBRERÍAS: segment-anything-2, torch, numpy, Pillow
+
+annotator.py
+  FUNCIÓN: Visualizar las detecciones sobre la imagen.
+  ENTRADA: Imagen original + lista de motivos con bboxes.
+  SALIDA : Imagen PNG con anotaciones guardada en disco.
+  USO    : Debugging durante desarrollo + incluir en ficha ICANH.
+  LIBRERÍAS: supervision, opencv-python, Pillow

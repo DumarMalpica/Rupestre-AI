@@ -1,0 +1,65 @@
+CARPETA: agents/heritage_documenter/
+═══════════════════════════════════════════════════════════════
+
+AGENTE: AG6 — Heritage Documenter
+RESPONSABLE: Dev 2
+POSICIÓN EN EL GRAFO: Nodo 6 — ÚLTIMO agente en ejecutarse
+
+─────────────────────────────────────────────────────────────
+QUÉ HACE
+─────────────────────────────────────────────────────────────
+El ensamblador final. Recibe todo lo producido por los cinco
+agentes anteriores y lo convierte en la ficha oficial ICANH.
+
+Es el ÚNICO agente que consume el estado completo del sistema.
+Su output es el producto final que recibe el arqueólogo,
+el gestor cultural o la institución patrimonial.
+
+─────────────────────────────────────────────────────────────
+QUÉ RECIBE DEL ESTADO (INPUTS)
+─────────────────────────────────────────────────────────────
+  site_name, coordinates           : datos del sitio
+  enhanced_image                   : imagen realzada (AG1)
+  detected_motifs, motif_count     : detecciones (AG2)
+  similar_motifs, has_regional_parallels : comparación (AG3)
+  cultural_interpretation, cited_sources : interpretación (AG4)
+  reconstructed_image, confidence_map    : reconstrucción (AG5)
+
+─────────────────────────────────────────────────────────────
+QUÉ ENTREGA AL ESTADO (OUTPUTS)
+─────────────────────────────────────────────────────────────
+  ficha_pdf_path (str) : ruta al PDF de la ficha ICANH
+  ficha_json     (dict): ficha completa como diccionario
+  record_id      (str) : identificador único del registro (UUID)
+
+─────────────────────────────────────────────────────────────
+VALOR MOCKEADO ACTUAL
+─────────────────────────────────────────────────────────────
+  ficha_json = diccionario con todos los campos del estado
+  ficha_pdf_path = ruta hardcodeada (PDF no se genera aún)
+  record_id = UUID generado dinámicamente en cada ejecución
+
+─────────────────────────────────────────────────────────────
+IMPLEMENTACIÓN REAL ESPERADA (tools/)
+─────────────────────────────────────────────────────────────
+  json_builder.py
+    Construir el diccionario completo en formato ICANH.
+    Validar con schema Pydantic antes de retornar.
+
+  template_engine.py
+    Renderizar templates/ficha_icanh.html con Jinja2.
+    El template incluye galería de imágenes, tabla de motivos,
+    interpretación con citas y mapa de ubicación.
+
+  pdf_generator.py
+    Convertir el HTML renderizado a PDF con WeasyPrint.
+    Formato A4, imprimible, con encabezado y pie de página.
+
+─────────────────────────────────────────────────────────────
+TESTS INDEPENDIENTES (tests/)
+─────────────────────────────────────────────────────────────
+Casos a cubrir:
+  ✓ Genera record_id único no vacío
+  ✓ Dos ejecuciones generan record_ids diferentes
+  ✓ ficha_json contiene todos los campos obligatorios ICANH
+  ✓ site_name en la ficha coincide con el del estado mock

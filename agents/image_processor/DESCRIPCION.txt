@@ -1,0 +1,68 @@
+CARPETA: agents/image_processor/
+═══════════════════════════════════════════════════════════════
+
+AGENTE: AG1 — Image Processor
+RESPONSABLE: Dev 1
+POSICIÓN EN EL GRAFO: Nodo 1 — PRIMER agente en ejecutarse
+
+─────────────────────────────────────────────────────────────
+QUÉ HACE
+─────────────────────────────────────────────────────────────
+Es el portero del pipeline. Recibe la fotografía cruda que el
+arqueólogo tomó en campo y la prepara para que los agentes
+posteriores puedan procesarla correctamente.
+
+Sus dos responsabilidades son:
+1. REALZAR la imagen para revelar pigmentos que el ojo no ve
+2. EVALUAR si la imagen tiene suficiente calidad para continuar
+
+Si la imagen no pasa la evaluación de calidad, retorna
+image_quality_ok=False y el grafo se detiene ahí.
+
+─────────────────────────────────────────────────────────────
+QUÉ RECIBE DEL ESTADO (INPUTS)
+─────────────────────────────────────────────────────────────
+  image_path  (str) : ruta a la imagen original subida
+  site_name   (str) : nombre del sitio rupestre
+  coordinates (tuple): (latitud, longitud) del sitio
+
+─────────────────────────────────────────────────────────────
+QUÉ ENTREGA AL ESTADO (OUTPUTS)
+─────────────────────────────────────────────────────────────
+  enhanced_image   (str)  : ruta a la imagen procesada
+  image_quality_ok (bool) : True = continuar | False = detener
+
+─────────────────────────────────────────────────────────────
+VALOR MOCKEADO ACTUAL
+─────────────────────────────────────────────────────────────
+  enhanced_image   = la misma ruta de image_path (sin procesar)
+  image_quality_ok = True (siempre válida por ahora)
+
+─────────────────────────────────────────────────────────────
+IMPLEMENTACIÓN REAL ESPERADA (tools/)
+─────────────────────────────────────────────────────────────
+  enhancer.py
+    Aplicar DStretch (decorrelation stretch) para realzar
+    pigmentos desvanecidos. Probar espacios de color YBK, YDS,
+    LDS y elegir el de mayor contraste de pigmento.
+
+  corrector.py
+    Corregir distorsión de perspectiva si la foto fue tomada
+    en ángulo respecto a la roca. Usar homografía con OpenCV.
+
+  quality.py
+    Evaluar resolución mínima (>1MP), nivel de desenfoque
+    (varianza del Laplaciano) y sobreexposición.
+    Retornar (bool, str): pasa/no pasa + motivo de rechazo.
+
+─────────────────────────────────────────────────────────────
+TESTS INDEPENDIENTES (tests/)
+─────────────────────────────────────────────────────────────
+Los tests deben correr SIN el grafo completo.
+Se usa un estado mock con image_path hardcodeado.
+
+Casos a cubrir:
+  ✓ Imagen válida retorna image_quality_ok=True
+  ✓ El resultado contiene enhanced_image no nulo
+  ✓ No escribe campos de otros agentes (detected_motifs, etc.)
+  ✓ Imagen inexistente no lanza excepción no controlada

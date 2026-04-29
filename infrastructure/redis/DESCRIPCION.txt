@@ -1,0 +1,25 @@
+CARPETA: infrastructure/redis/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+redis.conf
+  Configuración de Redis para dos propósitos simultáneos:
+
+  COMO BROKER DE CELERY:
+    Recibe las tareas de análisis enviadas por la API y las
+    encola para que el worker de agentes las procese de forma
+    asíncrona. Así la API responde inmediatamente sin esperar
+    que el pipeline completo termine.
+
+  COMO CACHÉ DE RESPUESTAS LLM:
+    Guarda las interpretaciones generadas por AG4 con TTL de
+    24 horas. Si el mismo sitio se analiza dos veces en el día,
+    el segundo análisis usa la respuesta cacheada sin llamar
+    a la API de OpenAI, reduciendo costos.
+
+  PARÁMETROS CLAVE:
+    maxmemory        → límite de memoria (256MB)
+    maxmemory-policy → allkeys-lru (elimina las menos usadas)
+    save             → persistencia en disco (respaldo)

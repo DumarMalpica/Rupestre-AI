@@ -1,0 +1,22 @@
+CARPETA: agents/reconstructor/tests/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Tests unitarios del AG5. Corren sin el grafo completo y sin
+GPU ni modelos descargados gracias al placeholder actual.
+
+El estado mock incluye enhanced_image y detected_motifs
+hardcodeados para simular los outputs de AG1 y AG2.
+
+CÓMO CORRER
+───────────
+  pytest agents/reconstructor/tests/ -v
+
+CASOS DE PRUEBA A CUBRIR
+─────────────────────────
+  ✓ Retorna reconstructed_image no nulo
+  ✓ reconstruction_applied es de tipo bool
+  ✓ Sin modelos GAN disponibles no rompe el pipeline
+  ✓ Cuando reconstruction_applied=False, la imagen
+    retornada es igual a enhanced_image (sin cambios)

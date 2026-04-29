@@ -1,0 +1,43 @@
+CARPETA: models/yolov11/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Pesos y configuración del modelo YOLOv11 usado por
+AG2 Motif Detector para detectar figuras en los pictogramas.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+config.yaml
+  Configuración del modelo:
+    - Número de clases de motivos rupestres
+    - Nombres de las clases (ver lista abajo)
+    - Tamaño de imagen de entrada para inferencia
+    - Umbral de confidence (default: 0.5)
+    - Umbral de IoU para NMS (default: 0.45)
+
+README.md
+  Instrucciones para:
+    1. Conectar con el dataset anotado en Roboflow
+    2. Ejecutar el fine-tuning de YOLOv11 base
+    3. Evaluar métricas (objetivo: IoU > 0.82)
+    4. Exportar los pesos al formato correcto
+
+*.pt  ← NO en Git, usar DVC
+  Pesos del modelo fine-tuned sobre corpus rupestre.
+
+CLASES DE MOTIVOS (definición inicial)
+──────────────────────────────────────
+  0: espiral
+  1: figura_antropomorfa
+  2: figura_zoomorfa
+  3: linea_geometrica
+  4: punto_cupula
+  5: figura_solar
+  (se pueden agregar más según el corpus anotado)
+
+CÓMO LO USA EL SISTEMA
+───────────────────────
+AG2 Motif Detector → tools/yolo_detector.py → carga config.yaml
+y los pesos .pt para ejecutar la detección sobre la imagen.

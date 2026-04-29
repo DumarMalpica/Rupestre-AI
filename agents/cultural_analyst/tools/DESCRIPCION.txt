@@ -1,0 +1,35 @@
+CARPETA: agents/cultural_analyst/tools/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+rag_chain.py
+  FUNCIÓN: Pipeline RAG completo para interpretación cultural.
+  ENTRADA: Contexto de motivos, paralelos y datos del sitio.
+  SALIDA : Tuple (interpretación: str, fuentes: list).
+  FLUJO  :
+    query → embeddings → ChromaDB → fragmentos relevantes
+    → prompt con contexto → LLM → interpretación + fuentes
+  REGLA  : Si ChromaDB no retorna nada relevante, el agente
+            marca la ficha como "sin contexto suficiente"
+            en lugar de inventar información.
+  LIBRERÍAS: langchain, langchain-community, chromadb
+
+llm_client.py
+  FUNCIÓN: Abstracción del cliente LLM.
+  ENTRADA: Prompt del sistema y prompt del usuario.
+  SALIDA : String con la respuesta del LLM.
+  MODOS  :
+    mock   → retorna respuesta hardcodeada (para tests)
+    ollama → Llama 3.3 local vía Ollama (para desarrollo)
+    openai → GPT-4o vía API (para producción)
+  LIBRERÍAS: langchain-openai, ollama, core.config
+
+source_validator.py
+  FUNCIÓN: Validar fuentes citadas contra el corpus real.
+  ENTRADA: Texto de interpretación + fuentes del corpus.
+  SALIDA : Lista de fuentes validadas (sin inventadas).
+  LÓGICA : Cruza cada cita con los metadatos de ChromaDB.
+            Si la cita no existe, la elimina del output.
+  LIBRERÍAS: chromadb, corpus/vectorstore/chroma_client.py

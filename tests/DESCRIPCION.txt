@@ -1,0 +1,41 @@
+CARPETA: tests/
+═══════════════════════════════════════════════════════════════
+
+RESPONSABLE: Compartido
+
+PROPÓSITO
+─────────
+Tests de INTEGRACIÓN que verifican el sistema completo.
+
+DIFERENCIA CON LOS TESTS DE CADA AGENTE
+─────────────────────────────────────────
+  agents/*/tests/  → tests UNITARIOS del agente aislado
+                     corren siempre, sin servicios externos
+                     usan estados mock
+
+  tests/           → tests de INTEGRACIÓN del grafo completo
+                     corren solo en PRs hacia main
+                     requieren servicios levantados
+
+CÓMO CORRER
+───────────
+  # Solo tests que no necesitan servicios:
+  pytest tests/ -v -k "not integration"
+
+  # Todos los tests (requiere docker-compose up):
+  pytest tests/ -v
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+test_graph_integration.py
+  Prueba el grafo de extremo a extremo con imagen real.
+  Verifica que la ficha JSON final tenga todos los campos.
+  Verifica que el grafo termine sin excepción con imagen válida.
+  Verifica que el grafo maneje limpiamente una imagen inválida.
+
+test_api.py
+  Prueba los endpoints de la API con TestClient de FastAPI.
+  No requiere servidor real levantado.
+  Verifica GET /health retorna 200 con status 'ok'.
+  Verifica GET /api/docs retorna 200 (Swagger disponible).

@@ -1,0 +1,28 @@
+CARPETA: agents/image_processor/tests/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Tests unitarios del AG1 que corren de forma completamente
+independiente, sin necesitar el grafo completo ni servicios
+externos como ChromaDB, Redis o la API.
+
+CÓMO CORRER
+───────────
+  pytest agents/image_processor/tests/ -v
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+test_agent.py
+  Tests del nodo principal (agent.py).
+  Usa un estado mock con valores hardcodeados.
+  NO requiere GPU, modelos descargados ni servicios levantados.
+
+fixtures/
+  Imágenes de muestra para los tests.
+  Incluir al menos:
+    - sample_good.jpg    → imagen válida que debe pasar calidad
+    - sample_blurry.jpg  → imagen borrosa que debe fallar
+    - sample_dark.jpg    → imagen muy oscura que debe fallar
+  Usar imágenes de dominio público de sitios rupestres.

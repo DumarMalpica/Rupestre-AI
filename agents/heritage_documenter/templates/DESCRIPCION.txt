@@ -1,0 +1,34 @@
+CARPETA: agents/heritage_documenter/templates/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Contiene los templates HTML usados por template_engine.py
+para renderizar las fichas ICANH antes de convertirlas a PDF.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+ficha_icanh.html
+  Template Jinja2 del formato oficial ICANH adaptado al sistema.
+
+  SECCIONES:
+    1. Encabezado institucional (logo UPTC + ICANH, record_id)
+    2. Datos de identificación del sitio (nombre, coords, fecha)
+    3. Galería comparativa de imágenes en tres columnas:
+         - Imagen original
+         - Imagen realzada (DStretch)
+         - Imagen reconstruida (GAN)
+    4. Tabla de motivos detectados (clase, confidence, bbox)
+    5. Paralelos iconográficos regionales
+    6. Interpretación cultural con citas formateadas
+    7. Referencias bibliográficas en formato académico
+    8. Metadatos técnicos (confianza del RAG, GAN aplicado)
+    9. Pie de página con fecha de generación
+
+  VARIABLES JINJA2 DISPONIBLES:
+    {{ record_id }}, {{ site_name }}, {{ coordinates }},
+    {{ generated_at }}, {{ motif_count }},
+    {{ cultural_interpretation }},
+    {% for motif in detected_motifs %},
+    {% for source in cited_sources %}

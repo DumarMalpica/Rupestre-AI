@@ -1,0 +1,35 @@
+CARPETA: infrastructure/postgres/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+init.sql
+  Script SQL ejecutado automáticamente al crear el contenedor.
+
+  EXTENSIONES:
+    PostGIS → soporte de datos geoespaciales
+
+  TABLAS:
+    sites
+      id          UUID PRIMARY KEY
+      name        VARCHAR(255)
+      department  VARCHAR(100)
+      municipality VARCHAR(100)
+      location    GEOGRAPHY(POINT, 4326) ← coordenadas GPS
+      created_at  TIMESTAMP
+
+    records
+      id                   UUID PRIMARY KEY
+      site_id              UUID → FK a sites
+      record_id            VARCHAR(20) UNIQUE ← referencia externa
+      motif_count          INT
+      cultural_interpretation TEXT
+      reconstruction_applied  BOOLEAN
+      ficha_pdf_path       VARCHAR(500)
+      ficha_json           JSONB ← ficha completa como JSON
+      created_at           TIMESTAMP
+
+  ÍNDICES:
+    idx_sites_location  → GIST sobre location (búsqueda espacial)
+    idx_records_record_id → sobre record_id (búsqueda rápida)

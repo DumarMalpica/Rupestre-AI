@@ -1,0 +1,25 @@
+CARPETA: agents/iconographic_comparator/tests/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Tests unitarios del AG3. Corren sin el grafo completo.
+El estado mock incluye detected_motifs hardcodeados con
+un motivo de tipo espiral de ejemplo.
+
+NOTA IMPORTANTE
+───────────────
+Cuando se implemente retriever.py, los tests necesitarán
+una instancia de ChromaDB local con datos de prueba.
+Por ahora los mocks evitan esa dependencia.
+
+CÓMO CORRER
+───────────
+  pytest agents/iconographic_comparator/tests/ -v
+
+CASOS DE PRUEBA A CUBRIR
+─────────────────────────
+  ✓ Retorna similar_motifs como lista
+  ✓ has_regional_parallels es de tipo bool
+  ✓ Los scores de similitud están entre 0.0 y 1.0
+  ✓ Con detected_motifs vacío no lanza excepción

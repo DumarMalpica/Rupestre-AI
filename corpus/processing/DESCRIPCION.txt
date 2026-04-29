@@ -1,0 +1,46 @@
+CARPETA: corpus/processing/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Limpieza, segmentación y preparación del texto para indexación.
+Transforma documentos completos en fragmentos (chunks) listos
+para ser vectorizados y almacenados en ChromaDB.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+chunker.py
+  FUNCIÓN: Dividir documentos en fragmentos con overlap.
+  ENTRADA: Lista de dicts con key 'text' y 'metadata'.
+  SALIDA : Lista de chunks con text y metadata enriquecida.
+  PARÁMETROS:
+    chunk_size    = 800 tokens  (tamaño de cada fragmento)
+    chunk_overlap = 150 tokens  (overlap para no perder contexto)
+  SEPARADORES PROBADOS EN ORDEN:
+    párrafo doble → párrafo simple → punto → espacio → caracter
+  LIBRERÍA: langchain (RecursiveCharacterTextSplitter)
+
+cleaner.py  ← PENDIENTE IMPLEMENTAR
+  FUNCIÓN: Limpiar ruido de OCR y normalizar texto.
+  ENTRADA: String de texto crudo.
+  SALIDA : String limpio y normalizado.
+  TAREAS :
+    - Eliminar ruido de reconocimiento OCR
+    - Normalizar términos muiscas y arqueológicos
+    - Corregir tildes y caracteres especiales
+  LIBRERÍA: spaCy (es_core_news_lg)
+
+metadata_schema.py
+  FUNCIÓN: Definir el schema de metadatos de cada fragmento.
+  CAMPOS :
+    source_type   : pdf | audio_transcription | ocr
+    file          : nombre del archivo original
+    author        : autor del documento
+    year          : año de publicación
+    institution   : ICANH, UPTC, UNAL, etc.
+    site_name     : sitio arqueológico referenciado
+    document_type : publicacion | tesis | informe | oral
+    page          : número de página (para PDFs)
+    language      : idioma del documento (default: es)
+  LIBRERÍA: pydantic

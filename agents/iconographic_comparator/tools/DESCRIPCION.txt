@@ -1,0 +1,29 @@
+CARPETA: agents/iconographic_comparator/tools/
+═══════════════════════════════════════════════════════════════
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+embedder.py
+  FUNCIÓN: Convertir imagen del motivo en vector numérico.
+  ENTRADA: Imagen del crop como array numpy o ruta.
+  SALIDA : Vector de embeddings como lista de floats.
+  MODELO : CLIP multilingüe o modelo de visión similar.
+           Figuras similares producen vectores cercanos.
+  LIBRERÍAS: sentence-transformers, torch, Pillow
+
+retriever.py
+  FUNCIÓN: Buscar paralelos similares en ChromaDB.
+  ENTRADA: Vector del motivo + parámetros de filtro opcionales.
+  SALIDA : Lista de resultados con documento, metadatos y score.
+  COLECCIÓN: inventario_motivos en ChromaDB.
+  FILTROS : departamento, cultura, período histórico.
+  LIBRERÍAS: chromadb, corpus/vectorstore/chroma_client.py
+
+scorer.py
+  FUNCIÓN: Rankear resultados por relevancia combinada.
+  ENTRADA: Lista de resultados de ChromaDB con scores.
+  SALIDA : Lista de resultados re-rankeados con score_final.
+  LÓGICA : Combina score vectorial + penalización por distancia
+           geográfica + bonus por misma cultura documentada.
+  LIBRERÍAS: numpy

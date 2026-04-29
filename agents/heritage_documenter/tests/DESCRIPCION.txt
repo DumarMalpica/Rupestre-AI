@@ -1,0 +1,22 @@
+CARPETA: agents/heritage_documenter/tests/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Tests unitarios del AG6. Corren sin el grafo completo.
+
+El estado mock incluye todos los campos del sistema simulados:
+detected_motifs, similar_motifs, cultural_interpretation,
+cited_sources, reconstructed_image, etc.
+
+CÓMO CORRER
+───────────
+  pytest agents/heritage_documenter/tests/ -v
+
+CASOS DE PRUEBA A CUBRIR
+─────────────────────────
+  ✓ Genera record_id único no vacío
+  ✓ Dos ejecuciones generan record_ids distintos
+  ✓ ficha_json contiene site_name, cultural_interpretation,
+    cited_sources, motif_count y generated_at
+  ✓ site_name en la ficha coincide con el del estado mock

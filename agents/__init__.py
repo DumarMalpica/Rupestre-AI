@@ -1,1 +1,0 @@
-"""Red de agentes autónomos del sistema Rupestre AI."""

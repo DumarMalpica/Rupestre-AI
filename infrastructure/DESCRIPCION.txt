@@ -1,0 +1,22 @@
+CARPETA: infrastructure/
+═══════════════════════════════════════════════════════════════
+
+RESPONSABLE: Compartido
+
+PROPÓSITO
+─────────
+Configuración de los servicios de infraestructura. Todos se
+levantan automáticamente con: docker-compose up -d
+
+SUBCARPETAS
+───────────
+
+postgres/
+  Base de datos relacional con extensión PostGIS para datos
+  geoespaciales de los sitios rupestres.
+
+redis/
+  Cache de respuestas LLM y broker de cola de tareas Celery.
+
+minio/
+  Almacenamiento de objetos para imágenes y fichas PDF.

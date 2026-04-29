@@ -1,0 +1,45 @@
+CARPETA: agents/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Contiene los seis agentes autónomos del sistema. Cada agente
+es un módulo Python independiente con su propia carpeta.
+El grafo LangGraph en core/graph.py los conecta y orquesta.
+
+REGLA FUNDAMENTAL
+─────────────────
+Cada agente SOLO conoce su porción del estado:
+  - Lee únicamente los campos que le corresponden
+  - Escribe únicamente los campos que son su responsabilidad
+  - No accede a los campos de otros agentes
+
+DIVISIÓN DE TRABAJO
+───────────────────
+Dev 1 → image_processor, motif_detector, reconstructor
+Dev 2 → iconographic_comparator, cultural_analyst, heritage_documenter
+
+ESTRUCTURA INTERNA DE CADA AGENTE
+──────────────────────────────────
+Cada carpeta de agente contiene:
+
+  agent.py      → función del nodo LangGraph (el código principal)
+  config.py     → parámetros configurables del agente
+  schemas.py    → modelos Pydantic de entrada y salida
+  tools/        → herramientas específicas del agente
+  tests/        → tests independientes sin necesidad del grafo
+
+ESTADO ACTUAL DE IMPLEMENTACIÓN
+────────────────────────────────
+Todos los agentes retornan valores MOCKEADOS o HARDCODEADOS
+mientras se desarrollan las tools reales. El grafo ya funciona
+de extremo a extremo con estos valores de prueba.
+
+SECUENCIA DE EJECUCIÓN EN EL GRAFO
+────────────────────────────────────
+  AG1 image_processor
+   → AG2 motif_detector
+    → AG3 iconographic_comparator
+     → AG4 cultural_analyst
+      → AG5 reconstructor
+       → AG6 heritage_documenter

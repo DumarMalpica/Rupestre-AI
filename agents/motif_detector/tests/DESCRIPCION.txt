@@ -1,0 +1,19 @@
+CARPETA: agents/motif_detector/tests/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Tests unitarios del AG2. Corren sin el grafo completo.
+El estado mock incluye enhanced_image con una ruta de muestra.
+
+CÓMO CORRER
+───────────
+  pytest agents/motif_detector/tests/ -v
+
+CASOS DE PRUEBA A CUBRIR
+─────────────────────────
+  ✓ Con imagen válida retorna lista detected_motifs
+  ✓ motif_count es igual a len(detected_motifs)
+  ✓ Cada motivo tiene todos los campos requeridos
+  ✓ confidence de cada motivo está entre 0.0 y 1.0
+  ✓ Con imagen inexistente no rompe el pipeline

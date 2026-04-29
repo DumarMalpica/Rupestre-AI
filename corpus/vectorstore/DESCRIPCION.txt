@@ -1,0 +1,38 @@
+CARPETA: corpus/vectorstore/
+═══════════════════════════════════════════════════════════════
+
+PROPÓSITO
+─────────
+Cliente ChromaDB e indexación de fragmentos vectorizados.
+Es el puente entre los chunks procesados y la base de datos
+vectorial que los agentes AG3 y AG4 consultan en tiempo real.
+
+ARCHIVOS QUE DEBE CONTENER
+───────────────────────────
+
+chroma_client.py
+  FUNCIÓN: Gestionar la conexión con ChromaDB (singleton).
+  ENTRADA: Configuración desde core/config.py (chroma_path).
+  SALIDA : Cliente y colecciones de ChromaDB.
+  PATRÓN : Singleton — solo existe una instancia en el proceso.
+  EXPONE :
+    get_client()         → cliente ChromaDB persistente
+    get_collection(name) → crea o retorna una colección
+  COLECCIONES DEL SISTEMA:
+    corpus_rupestre  → fragmentos de publicaciones ICANH/UPTC
+    inventario_motivos → embeddings de imágenes del inventario
+  LIBRERÍA: chromadb
+
+indexer.py
+  FUNCIÓN: Generar embeddings e indexar en ChromaDB.
+  ENTRADA: Lista de chunks del procesador O texto de consulta.
+  SALIDA :
+    Para indexar → número de chunks guardados exitosamente
+    Para consultar → lista de resultados con text, metadata, score
+  MODELO DE EMBEDDINGS: multilingual-e5-large
+    (sentence-transformers — soporta español, 1024 dimensiones)
+  PROCESO:
+    chunks → encode() → embeddings → ChromaDB.add()
+  MANEJA DEDUPLICACIÓN:
+    No re-indexa documentos que ya están en ChromaDB.
+  LIBRERÍA: sentence-transformers, chromadb

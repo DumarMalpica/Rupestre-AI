@@ -1,0 +1,78 @@
+CARPETA: agents/cultural_analyst/
+═══════════════════════════════════════════════════════════════
+
+AGENTE: AG4 — Cultural Analyst
+RESPONSABLE: Dev 2
+POSICIÓN EN EL GRAFO: Nodo 4 — EL MÁS COMPLEJO
+
+─────────────────────────────────────────────────────────────
+QUÉ HACE
+─────────────────────────────────────────────────────────────
+Integra el contexto acumulado de los agentes anteriores con
+el corpus académico indexado para generar interpretaciones
+arqueológicas fundamentadas. Aquí vive el pipeline RAG completo.
+
+NUNCA habla de memoria: todo lo que dice está respaldado por
+fragmentos reales del corpus recuperados por ChromaDB.
+
+Si la confianza de la interpretación es baja (< 0.6),
+activa el flag HITL (Human-in-the-Loop) y el grafo termina
+sin generar la ficha automáticamente. Un arqueólogo debe
+revisar y aprobar manualmente.
+
+─────────────────────────────────────────────────────────────
+QUÉ RECIBE DEL ESTADO (INPUTS)
+─────────────────────────────────────────────────────────────
+  detected_motifs (list): motivos detectados por AG2
+  similar_motifs  (list): paralelos encontrados por AG3
+  site_name       (str) : nombre del sitio
+  coordinates     (tuple): ubicación GPS del sitio
+
+─────────────────────────────────────────────────────────────
+QUÉ ENTREGA AL ESTADO (OUTPUTS)
+─────────────────────────────────────────────────────────────
+  cultural_interpretation   (str)  : texto interpretativo
+  cited_sources             (list) : fuentes citadas del corpus
+  interpretation_confidence (float): confianza entre 0 y 1
+  requires_human_review     (bool) : True activa flujo HITL
+
+─────────────────────────────────────────────────────────────
+VALOR MOCKEADO ACTUAL
+─────────────────────────────────────────────────────────────
+  cultural_interpretation = texto hardcodeado sobre espirales
+                            muiscas y calendario solar
+  cited_sources           = [una fuente ICANH hardcodeada]
+  interpretation_confidence = 0.82
+  requires_human_review   = False
+
+─────────────────────────────────────────────────────────────
+IMPLEMENTACIÓN REAL ESPERADA (tools/)
+─────────────────────────────────────────────────────────────
+  rag_chain.py
+    Pipeline RAG completo con LangChain:
+    1. Construir query con contexto de motivos y sitio
+    2. Vectorizar query con el modelo de embeddings
+    3. Recuperar fragmentos de ChromaDB (corpus_rupestre)
+    4. Construir prompt inyectando fragmentos como contexto
+    5. Invocar el LLM y extraer interpretación y fuentes
+    REGLA: Nunca responder sin contexto del corpus.
+
+  llm_client.py
+    Cliente LLM abstracto. Lee llm_provider de config:
+      ollama → Llama 3.3 local (desarrollo, sin costo)
+      openai → GPT-4o (producción, con costo)
+      mock   → respuesta predefinida (tests)
+
+  source_validator.py
+    Verificar que las fuentes citadas por el LLM existan
+    realmente en el corpus. Eliminar citas inventadas.
+    Previene alucinaciones de referencias bibliográficas.
+
+─────────────────────────────────────────────────────────────
+TESTS INDEPENDIENTES (tests/)
+─────────────────────────────────────────────────────────────
+Casos a cubrir:
+  ✓ Genera interpretación no vacía (> 10 caracteres)
+  ✓ cited_sources es una lista (puede estar vacía en mock)
+  ✓ interpretation_confidence está entre 0.0 y 1.0
+  ✓ requires_human_review siempre está presente como bool

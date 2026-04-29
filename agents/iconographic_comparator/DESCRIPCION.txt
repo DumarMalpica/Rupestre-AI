@@ -1,0 +1,70 @@
+CARPETA: agents/iconographic_comparator/
+═══════════════════════════════════════════════════════════════
+
+AGENTE: AG3 — Iconographic Comparator
+RESPONSABLE: Dev 2
+POSICIÓN EN EL GRAFO: Nodo 3
+
+─────────────────────────────────────────────────────────────
+QUÉ HACE
+─────────────────────────────────────────────────────────────
+Es la memoria visual del sistema. Toma cada motivo detectado
+por AG2 y busca en ChromaDB si ese mismo símbolo o uno similar
+fue documentado antes en otro sitio del altiplano andino.
+
+Responde la pregunta:
+¿Esta espiral ya fue vista en Villa de Leyva, Gámeza o Facatativá?
+¿Con qué grado de similitud? ¿En qué contexto cultural?
+
+─────────────────────────────────────────────────────────────
+QUÉ RECIBE DEL ESTADO (INPUTS)
+─────────────────────────────────────────────────────────────
+  detected_motifs (list): motivos detectados por AG2
+  site_name       (str) : para excluir el mismo sitio
+
+─────────────────────────────────────────────────────────────
+QUÉ ENTREGA AL ESTADO (OUTPUTS)
+─────────────────────────────────────────────────────────────
+  similar_motifs (list): lista de dicts por motivo comparado.
+    Cada dict contiene:
+      motif_id    (str) : id del motivo original
+      top_matches (list): lista de paralelos encontrados.
+        Cada match tiene:
+          site    (str)  : nombre del sitio donde apareció antes
+          score   (float): similitud entre 0 y 1
+          cultura (str)  : cultura a la que pertenece
+          periodo (str)  : período histórico
+
+  has_regional_parallels (bool):
+    True si algún motivo tiene score > 0.75 en el inventario.
+
+─────────────────────────────────────────────────────────────
+VALOR MOCKEADO ACTUAL
+─────────────────────────────────────────────────────────────
+  similar_motifs = [un resultado hardcodeado con score 0.88
+                    asociado a Villa de Leyva cultura Muisca]
+  has_regional_parallels = True
+
+─────────────────────────────────────────────────────────────
+IMPLEMENTACIÓN REAL ESPERADA (tools/)
+─────────────────────────────────────────────────────────────
+  embedder.py
+    Convertir el crop de cada motivo en un vector numérico
+    usando un modelo de embeddings de imagen (CLIP multilingüe).
+
+  retriever.py
+    Buscar en ChromaDB los N elementos más similares al vector
+    del motivo. Aplicar filtros por departamento y cultura.
+
+  scorer.py
+    Combinar score vectorial con metadatos culturales para
+    producir un score final más informativo. Normalizar a [0,1].
+
+─────────────────────────────────────────────────────────────
+TESTS INDEPENDIENTES (tests/)
+─────────────────────────────────────────────────────────────
+Casos a cubrir:
+  ✓ Retorna similar_motifs como lista
+  ✓ has_regional_parallels es bool
+  ✓ Los scores están entre 0.0 y 1.0
+  ✓ Con lista de motivos vacía no lanza excepción
