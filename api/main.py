@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routers.analysis import router as analysis_router
+from bot.whatsapp.router import router as whatsapp_router
 from core.config import settings
 
 
@@ -36,6 +37,7 @@ app.add_middleware(
 )
 
 app.include_router(analysis_router)
+app.include_router(whatsapp_router)
 
 
 @app.get("/health", include_in_schema=False)

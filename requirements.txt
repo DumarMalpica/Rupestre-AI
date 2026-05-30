@@ -29,3 +29,9 @@ PyMuPDF>=1.24.0            # fitz — carga PDFs del corpus
 # ── LLM providers ─────────────────────────────────────────────────────────────
 requests>=2.31.0            # ollama provider
 langchain-openai>=0.1.0     # openai provider
+
+# ── HTTP client ───────────────────────────────────────────────────────────────
+httpx>=0.27.0               # descarga de imágenes WhatsApp
+
+# ── WhatsApp / Twilio ─────────────────────────────────────────────────────────
+twilio>=8.0.0
