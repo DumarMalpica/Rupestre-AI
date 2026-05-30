@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ficha Rupestre — {{ ficha.site_name }}</title>
+  <style>
+    @page { size: A4; margin: 2cm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+      color: #1a1a2e;
+      line-height: 1.6;
+    }
+
+    /* ── ENCABEZADO ─────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid #1a3c5e;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      gap: 18px;
+    }
+    .logo {
+      flex-shrink: 0;
+      width: 72px;
+      height: 72px;
+      background: #1a3c5e;
+      color: #fff;
+      font-size: 9pt;
+      font-weight: bold;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+    .logo span { font-size: 7pt; font-weight: normal; margin-top: 2px; }
+    .header-text h1 {
+      font-size: 15pt;
+      color: #1a3c5e;
+      letter-spacing: 0.8px;
+      font-weight: bold;
+    }
+    .header-text p {
+      font-size: 8.5pt;
+      color: #5a7a9a;
+      margin-top: 3px;
+    }
+    .header-text .record {
+      margin-top: 6px;
+      font-size: 9pt;
+      color: #2c4a6a;
+      font-weight: bold;
+    }
+
+    /* ── SECCIONES ──────────────────────────────────────────────────── */
+    .section { margin-bottom: 18px; }
+    .section-title {
+      background: #1a3c5e;
+      color: #fff;
+      padding: 5px 12px;
+      font-size: 9.5pt;
+      font-weight: bold;
+      letter-spacing: 0.6px;
+      margin-bottom: 10px;
+    }
+
+    /* ── GRID DE DATOS ──────────────────────────────────────────────── */
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+      padding: 0 6px;
+    }
+    .data-item label {
+      display: block;
+      font-size: 8pt;
+      font-weight: bold;
+      color: #4a6a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .data-item span { font-size: 10pt; }
+
+    /* ── GALERÍA ────────────────────────────────────────────────────── */
+    .gallery {
+      display: flex;
+      gap: 10px;
+    }
+    .gallery-item {
+      flex: 1;
+      text-align: center;
+    }
+    .img-box {
+      background: #e8edf2;
+      height: 78px;
+      border: 1px solid #c0cdd8;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7a90a4;
+      font-size: 8.5pt;
+      font-style: italic;
+    }
+    .img-caption {
+      font-size: 7.5pt;
+      color: #6a7a8a;
+      margin-top: 4px;
+      word-break: break-all;
+    }
+
+    /* ── TABLA DE MOTIVOS ───────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+    th {
+      background: #e4ecf5;
+      color: #1a3c5e;
+      padding: 6px 8px;
+      border: 1px solid #b8cde0;
+      text-align: left;
+      font-weight: bold;
+    }
+    td {
+      padding: 5px 8px;
+      border: 1px solid #cddaeb;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #f4f8fc; }
+
+    /* ── INTERPRETACIÓN ─────────────────────────────────────────────── */
+    .interp-text {
+      border-left: 4px solid #1a3c5e;
+      background: #f7fafb;
+      padding: 10px 14px;
+      font-size: 10pt;
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+    .sources {
+      margin-top: 10px;
+      padding-left: 20px;
+      font-size: 9pt;
+    }
+    .sources li { margin-bottom: 3px; }
+
+    /* ── NOTA TÉCNICA ───────────────────────────────────────────────── */
+    .tech-box {
+      background: #fff8e1;
+      border: 1px solid #f0c440;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 9.5pt;
+    }
+    .tech-box p { margin-top: 6px; }
+    .tech-box p:first-child { margin-top: 0; }
+    .bar-outer {
+      display: inline-block;
+      height: 9px;
+      width: 180px;
+      background: #dde5ee;
+      border-radius: 5px;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    .bar-inner {
+      height: 9px;
+      background: #1a7c5e;
+      border-radius: 5px;
+    }
+    .ok   { color: #1a7c5e; font-weight: bold; }
+    .warn { color: #c0392b; font-weight: bold; }
+
+    /* ── PIE ────────────────────────────────────────────────────────── */
+    .footer {
+      border-top: 2px solid #1a3c5e;
+      margin-top: 26px;
+      padding-top: 8px;
+      font-size: 8pt;
+      color: #6a7a8a;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── ENCABEZADO ──────────────────────────────────────────────────── -->
+<div class="header">
+  <div class="logo">
+    ICANH
+    <span>Colombia</span>
+  </div>
+  <div class="header-text">
+    <h1>FICHA DE REGISTRO RUPESTRE</h1>
+    <p>Instituto Colombiano de Antropología e Historia</p>
+    <p>Sistema Rupestre AI — UPTC 2026</p>
+    <p class="record">Registro Nº {{ ficha.record_id }}&nbsp;&nbsp;·&nbsp;&nbsp;{{ ficha.generated_at[:10] }}</p>
+  </div>
+</div>
+
+<!-- ── SECCIÓN 1: DATOS DEL SITIO ─────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">1. DATOS DEL SITIO</div>
+  <div class="data-grid">
+    <div class="data-item">
+      <label>Nombre del sitio</label>
+      <span>{{ ficha.site_name }}</span>
+    </div>
+    <div class="data-item">
+      <label>Coordenadas geográficas</label>
+      <span>{{ ficha.coordinates[0] | round(4) }}°N, {{ ficha.coordinates[1] | round(4) }}°W</span>
+    </div>
+    <div class="data-item">
+      <label>Departamento</label>
+      <span>{{ ficha.department }}</span>
+    </div>
+    <div class="data-item">
+      <label>Municipio</label>
+      <span>{{ ficha.municipality }}</span>
+    </div>
+    <div class="data-item">
+      <label>Motivos registrados</label>
+      <span>{{ ficha.motif_count }}</span>
+    </div>
+    <div class="data-item">
+      <label>Paralelos regionales</label>
+      <span>{{ "Sí" if ficha.has_regional_parallels else "No" }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECCIÓN 2: REGISTRO FOTOGRÁFICO ────────────────────────────── -->
+<div class="section">
+  <div class="section-title">2. REGISTRO FOTOGRÁFICO</div>
+  <div class="gallery">
+    <div class="gallery-item">
+      <div class="img-box">Imagen original</div>
+      <div class="img-caption">{{ ficha.images.original or "N/A" }}</div>
+    </div>
+    <div class="gallery-item">
+      <div class="img-box">DStretch-LAB (realzada)</div>
+      <div class="img-caption">{{ ficha.images.enhanced or "N/A" }}</div>
+    </div>
+    {% if ficha.reconstruction_applied %}
+    <div class="gallery-item">
+      <div class="img-box">DeepFillv2 (reconstruida)</div>
+      <div class="img-caption">{{ ficha.images.reconstructed or "N/A" }}</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ── SECCIÓN 3: MOTIVOS DETECTADOS ──────────────────────────────── -->
+<div class="section">
+  <div class="section-title">3. MOTIVOS RUPESTRES DETECTADOS</div>
+  {% if ficha.detected_motifs %}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Clase / Tipo</th>
+        <th>Confianza</th>
+        <th>Localización (bbox)</th>
+        <th>Paralelo cultural</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for motif in ficha.detected_motifs %}
+      {% set ns = namespace(parallel="—") %}
+      {% for entry in ficha.similar_motifs %}
+        {% if entry.motif_id == motif.id and entry.top_matches %}
+          {% set ns.parallel = entry.top_matches[0].cultura ~ " · " ~ entry.top_matches[0].periodo %}
+        {% endif %}
+      {% endfor %}
+      <tr>
+        <td>{{ motif.id }}</td>
+        <td>{{ motif.clase }}</td>
+        <td>{{ (motif.confidence * 100) | round | int }}%</td>
+        <td>{{ motif.bbox | join(", ") }}</td>
+        <td>{{ ns.parallel }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="color:#888; font-style:italic; padding:6px 4px;">No se detectaron motivos en esta imagen.</p>
+  {% endif %}
+</div>
+
+<!-- ── SECCIÓN 4: INTERPRETACIÓN CULTURAL ─────────────────────────── -->
+<div class="section">
+  <div class="section-title">4. INTERPRETACIÓN CULTURAL</div>
+  <div class="interp-text">{{ ficha.cultural_interpretation }}</div>
+  {% if ficha.cited_sources %}
+  <ul class="sources">
+    {% for source in ficha.cited_sources %}
+    <li>{{ source.author }} ({{ source.year }}). <em>{{ source.title }}</em>.</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+
+<!-- ── SECCIÓN 5: NOTA TÉCNICA ────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">5. NOTA TÉCNICA</div>
+  <div class="tech-box">
+    <p>
+      <strong>Confianza de interpretación:</strong>
+      {{ (ficha.interpretation_confidence * 100) | round | int }}%
+      <span class="bar-outer">
+        <span class="bar-inner" style="width:{{ (ficha.interpretation_confidence * 100) | round | int }}%;"></span>
+      </span>
+    </p>
+    <p>
+      <strong>Reconstrucción digital:</strong>
+      {% if ficha.reconstruction_applied %}
+        <span class="ok">Aplicada (DeepFillv2)</span>
+      {% else %}
+        No aplicada
+      {% endif %}
+    </p>
+    <p>
+      {% if ficha.requires_human_review %}
+        <span class="warn">&#9888; REQUIERE REVISIÓN HUMANA — Confianza por debajo del umbral institucional ({{ (ficha.interpretation_confidence * 100) | round | int }}% &lt; 60%)</span>
+      {% else %}
+        <span class="ok">&#10003; Confianza suficiente para registro automático</span>
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+<!-- ── PIE DE PÁGINA ───────────────────────────────────────────────── -->
+<div class="footer">
+  <span>Fecha: {{ ficha.generated_at }}</span>
+  <span>Record ID: {{ ficha.record_id }}</span>
+  <span>Generado por Rupestre AI — UPTC 2026</span>
+</div>
+
+</body>
+</html>

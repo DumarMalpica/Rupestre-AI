@@ -1,0 +1,14 @@
+# Dependencias de desarrollo y testing
+pytest>=8.0
+pytest-asyncio>=0.23
+pytest-cov>=5.0
+ruff>=0.5
+black>=24.0
+mypy>=1.10
+
+# Runtime (espejo de requirements.txt para CI)
+pydantic-settings>=2.4.0
+langgraph>=0.2
+langfuse>=2.0
+Pillow>=10.0
+sqlalchemy>=1.4,<2.0.36
