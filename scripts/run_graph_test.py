@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import time
+import uuid
 from pathlib import Path
 
 
@@ -32,11 +33,14 @@ def main() -> None:
     from core.graph import rupestre_graph
     from core.state import RupestreState
 
+    session_id = str(uuid.uuid4())
+    print(f"Session ID: {session_id}  (búscalo en LangFuse → Traces → filter by session)")
+
     state: RupestreState = {
         "image_path": str(image_path),
         "site_name": "Sitio de Prueba",
         "coordinates": (4.7110, -74.0721),
-        "session_id": "test-session-001",
+        "session_id": session_id,
         "errors": [],
         "current_agent": "",
     }
@@ -61,6 +65,14 @@ def main() -> None:
     print(f"   AG6: ficha ICANH generada ✓")
     print(f"       Record ID: {record_id}")
     print(f"       PDF: {ficha_pdf_path} ✓")
+
+    # Flush explícito: garantiza que las trazas se envíen antes de que el proceso termine
+    try:
+        from core.logger import langfuse_context
+        langfuse_context.flush()
+        print("📡 Trazas enviadas a LangFuse ✓")
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
