@@ -1,0 +1,61 @@
+# ── Control de versiones ──────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Secretos ──────────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Entorno virtual (muy grande, no va al build context) ──────────────────────
+.venv/
+venv/
+env/
+
+# ── Datos en runtime (se crean dentro del contenedor) ────────────────────────
+data/chroma/
+data/fichas/
+data/samples/
+data/icanh_docs/
+
+# ── Pesos de modelos ML (binarios grandes) ────────────────────────────────────
+models/yolov11/weights/
+models/deepfillv2/weights/
+*.pt
+*.pth
+*.onnx
+*.safetensors
+
+# ── Caché y artefactos de Python ─────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ── Sistema operativo ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Archivos comprimidos ──────────────────────────────────────────────────────
+*.rar
+*.zip
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Docs (no necesarias en producción) ───────────────────────────────────────
+docs/

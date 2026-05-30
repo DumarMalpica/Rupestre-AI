@@ -95,6 +95,10 @@ logs/
 .ipynb_checkpoints/
 *.ipynb
 
+# ── Archivos comprimidos ──────────────────────────────────────────────────────
+*.rar
+*.zip
+
 # ── Archivos temporales ───────────────────────────────────────────────────────
 *.tmp
 *.temp

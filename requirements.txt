@@ -1,0 +1,31 @@
+# ── API ──────────────────────────────────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+# ── Core ─────────────────────────────────────────────────────────────────────
+pydantic-settings>=2.4.0
+langgraph>=0.2.0
+python-dotenv>=1.0.0
+
+# ── Observabilidad ────────────────────────────────────────────────────────────
+langfuse>=4.0.0
+
+# ── Procesamiento de imagen ───────────────────────────────────────────────────
+# Headless: sin dependencias de GUI (apto para servidor)
+opencv-python-headless>=4.9.0
+numpy>=1.26.0
+Pillow>=10.0.0
+
+# ── Generación de PDF ─────────────────────────────────────────────────────────
+reportlab>=4.0.0
+jinja2>=3.1.0
+
+# ── Vector store y corpus ─────────────────────────────────────────────────────
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+PyMuPDF>=1.24.0            # fitz — carga PDFs del corpus
+
+# ── LLM providers ─────────────────────────────────────────────────────────────
+requests>=2.31.0            # ollama provider
+langchain-openai>=0.1.0     # openai provider

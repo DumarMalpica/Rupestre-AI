@@ -36,3 +36,9 @@ app.add_middleware(
 )
 
 app.include_router(analysis_router)
+
+
+@app.get("/health", include_in_schema=False)
+def health_root() -> dict:
+    """Health check en raíz — usado por Railway y load balancers."""
+    return {"status": "ok", "version": "0.1.0"}
