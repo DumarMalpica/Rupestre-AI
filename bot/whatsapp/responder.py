@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import os
 
-from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
+from twilio.rest import Client
 
 from core.logger import get_logger
 
