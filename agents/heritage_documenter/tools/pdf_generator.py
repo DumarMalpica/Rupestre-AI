@@ -4,8 +4,8 @@ Genera ficha ICANH profesional usando ReportLab.
 """
 
 import os
-from typing import Any
 from datetime import datetime, timezone
+from typing import Any
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
