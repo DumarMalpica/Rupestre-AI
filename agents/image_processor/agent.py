@@ -1,5 +1,6 @@
 from agents.image_processor.tools.enhancer import enhance_image
 from agents.image_processor.tools.quality import check_quality
+from agents.image_processor.tools.resolution import maybe_upscale_to_min_resolution
 from core.config import settings
 from core.exceptions import AgentExecutionError
 from core.logger import get_logger, langfuse_context, observe
@@ -15,6 +16,20 @@ def _quality_span(image_path: str) -> tuple[bool, str]:
         output={"passed": passed, "reason": reason}
     )
     return passed, reason
+
+
+@observe(name="resolution_preprocess")
+def _resolution_span(image_path: str, output_dir: str) -> str:
+    upscaled_path, was_upscaled = maybe_upscale_to_min_resolution(
+        image_path,
+        output_dir,
+        min_area=settings.min_image_resolution,
+        max_upscale_factor=settings.max_upscale_factor,
+    )
+    langfuse_context.update_current_observation(
+        output={"upscaled": was_upscaled}
+    )
+    return upscaled_path
 
 
 @observe(name="enhance_image")
@@ -40,6 +55,7 @@ def image_processor_node(state: RupestreState) -> dict:
     try:
         image_path = state["image_path"]
 
+        image_path = _resolution_span(image_path, settings.output_dir)
         passed, reason = _quality_span(image_path)
 
         if not passed:

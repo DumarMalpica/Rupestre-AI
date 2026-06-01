@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     output_dir: str = "./data/fichas"
     samples_dir: str = "./data/samples"
     min_image_resolution: int = 1_000_000  # 1MP
+    max_upscale_factor: float = 4.0  # evita inflar imágenes extremadamente pequeñas
     blur_threshold: float = 100.0
     hitl_confidence_threshold: float = 0.6
     langfuse_public_key: str = ""
