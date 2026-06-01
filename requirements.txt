@@ -35,3 +35,6 @@ httpx>=0.27.0               # descarga de imágenes WhatsApp
 
 # ── WhatsApp / Twilio ─────────────────────────────────────────────────────────
 twilio>=8.0.0
+
+# ── Modelos AI / YOLO ─────────────────────────────────────────────────────────
+ultralytics>=8.3.0
