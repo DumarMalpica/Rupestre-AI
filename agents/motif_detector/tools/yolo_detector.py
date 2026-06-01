@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-
 import os
+
 from ultralytics import YOLO
 
 _model = None

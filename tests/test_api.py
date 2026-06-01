@@ -8,7 +8,6 @@ from PIL import Image
 
 from api.main import app
 
-
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
 

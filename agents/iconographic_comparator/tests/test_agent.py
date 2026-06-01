@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import pytest
-
 from agents.iconographic_comparator.agent import iconographic_comparator_node
 from core.state import RupestreState
 

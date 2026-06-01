@@ -4,16 +4,20 @@ Genera ficha ICANH profesional usando ReportLab.
 """
 import os
 from datetime import datetime, timezone
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
-from reportlab.lib.units import mm
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
-    HRFlowable, KeepTogether
-)
-from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.units import mm
+from reportlab.platypus import (
+    HRFlowable,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
 # ── Paleta de colores ──────────────────────────────────────────────────────────
 DARK       = colors.HexColor("#1a1a2e")
@@ -257,7 +261,6 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     interp       = ficha.get("cultural_interpretation", "")
     sources      = ficha.get("cited_sources", [])
     confidence   = ficha.get("interpretation_confidence", 0.0)
-    recon        = ficha.get("reconstruction_applied", False)
     now_str      = datetime.now(timezone.utc).strftime("%d %b %Y · %H:%M UTC")
 
     # Contar paralelos totales

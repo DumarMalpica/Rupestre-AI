@@ -4,12 +4,12 @@ import asyncio
 import os
 import uuid
 
-from core.graph import rupestre_graph
-from core.logger import get_logger
 from bot.whatsapp.conversation import ConversationSession, get_session, reset_session
 from bot.whatsapp.downloader import download_whatsapp_image
 from bot.whatsapp.parser import parse_coordinates, parse_municipality_department
 from bot.whatsapp.responder import send_document, send_message
+from core.graph import rupestre_graph
+from core.logger import get_logger
 
 logger = get_logger("whatsapp_handler")
 

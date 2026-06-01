@@ -1,7 +1,7 @@
-from core.logger import get_logger, langfuse_context, observe
-from core.exceptions import AgentExecutionError
-from core.state import RupestreState
 from agents.iconographic_comparator.tools.retriever import retrieve_similar
+from core.exceptions import AgentExecutionError
+from core.logger import get_logger, langfuse_context, observe
+from core.state import RupestreState
 
 logger = get_logger("iconographic_comparator")
 

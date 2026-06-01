@@ -60,9 +60,9 @@ def main() -> None:
     print(f"   AG1: imagen realzada {enhanced}")
     print(f"   AG2: {motif_count} motivos detectados ✓")
     print(f"   AG3: paralelos {'encontrados' if has_parallels else 'no encontrados'} ✓")
-    print(f"   AG4: interpretación generada ✓")
+    print("   AG4: interpretación generada ✓")
     print(f"   AG5: reconstrucción {'aplicada' if reconstruction_applied else 'omitida (sin GAN)'} ✓")
-    print(f"   AG6: ficha ICANH generada ✓")
+    print("   AG6: ficha ICANH generada ✓")
     print(f"       Record ID: {record_id}")
     print(f"       PDF: {ficha_pdf_path} ✓")
 

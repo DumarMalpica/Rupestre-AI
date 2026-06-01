@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import pytest
-
 from agents.motif_detector.agent import motif_detector_node
 from core.state import RupestreState
 
