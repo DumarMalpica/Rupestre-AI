@@ -3,6 +3,11 @@ from __future__ import annotations
 import os
 
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
+
+from core.logger import get_logger
+
+logger = get_logger("whatsapp_responder")
 
 
 def _client() -> Client:
@@ -14,11 +19,17 @@ def _client() -> Client:
 
 def send_message(to: str, body: str) -> None:
     """Envía un mensaje de texto por WhatsApp."""
-    _client().messages.create(
-        from_=os.getenv("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886"),
-        to=to,
-        body=body,
-    )
+    try:
+        _client().messages.create(
+            from_=os.getenv("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886"),
+            to=to,
+            body=body,
+        )
+    except TwilioRestException as exc:
+        # Evita tumbar el flujo cuando Twilio rechaza el envío (p. ej. cuota 429).
+        logger.warning(f"Twilio rechazó mensaje a {to}: {exc}")
+    except Exception as exc:
+        logger.error(f"Error enviando mensaje a {to}: {exc}")
 
 
 def send_document(to: str, railway_url: str, record_id: str) -> None:
