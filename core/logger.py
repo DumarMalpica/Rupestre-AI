@@ -27,9 +27,14 @@ try:
 except ImportError:
 
     class _NoOpCtx:
-        def update_current_trace(self, **kw): pass
-        def update_current_observation(self, **kw): pass
-        def flush(self): pass
+        def update_current_trace(self, **kw):
+            pass
+
+        def update_current_observation(self, **kw):
+            pass
+
+        def flush(self):
+            pass
 
     langfuse_context = _NoOpCtx()  # type: ignore[assignment]
 

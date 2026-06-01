@@ -84,7 +84,9 @@ async def analyze(
 def get_record(record_id: str) -> RecordResponse:
     ficha = _records.get(record_id)
     if ficha is None:
-        raise HTTPException(status_code=404, detail=f"Registro '{record_id}' no encontrado")
+        raise HTTPException(
+            status_code=404, detail=f"Registro '{record_id}' no encontrado"
+        )
 
     pdf_path = os.path.join(settings.output_dir, f"{record_id}_ficha_icanh.pdf")
     return RecordResponse(**ficha, pdf_available=os.path.isfile(pdf_path))

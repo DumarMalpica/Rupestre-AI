@@ -34,7 +34,9 @@ def main() -> None:
     from core.state import RupestreState
 
     session_id = str(uuid.uuid4())
-    print(f"Session ID: {session_id}  (búscalo en LangFuse → Traces → filter by session)")
+    print(
+        f"Session ID: {session_id}  (búscalo en LangFuse → Traces → filter by session)"
+    )
 
     state: RupestreState = {
         "image_path": str(image_path),
@@ -61,7 +63,9 @@ def main() -> None:
     print(f"   AG2: {motif_count} motivos detectados ✓")
     print(f"   AG3: paralelos {'encontrados' if has_parallels else 'no encontrados'} ✓")
     print("   AG4: interpretación generada ✓")
-    print(f"   AG5: reconstrucción {'aplicada' if reconstruction_applied else 'omitida (sin GAN)'} ✓")
+    print(
+        f"   AG5: reconstrucción {'aplicada' if reconstruction_applied else 'omitida (sin GAN)'} ✓"
+    )
     print("   AG6: ficha ICANH generada ✓")
     print(f"       Record ID: {record_id}")
     print(f"       PDF: {ficha_pdf_path} ✓")
@@ -69,6 +73,7 @@ def main() -> None:
     # Flush explícito: garantiza que las trazas se envíen antes de que el proceso termine
     try:
         from core.logger import langfuse_context
+
         langfuse_context.flush()
         print("📡 Trazas enviadas a LangFuse ✓")
     except Exception:

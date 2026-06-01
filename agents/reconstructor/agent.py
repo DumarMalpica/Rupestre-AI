@@ -28,8 +28,10 @@ def _inpaint_span(enhanced: str, mask_path: str | None) -> tuple[str, bool]:
 def reconstructor_node(state: RupestreState) -> dict:
     langfuse_context.update_current_trace(
         session_id=state.get("session_id", "default"),
-        input={"enhanced_image": state.get("enhanced_image"),
-               "motif_count": state.get("motif_count", 0)},
+        input={
+            "enhanced_image": state.get("enhanced_image"),
+            "motif_count": state.get("motif_count", 0),
+        },
         tags=["rupestre-ai", "ag5"],
     )
 
@@ -43,10 +45,12 @@ def reconstructor_node(state: RupestreState) -> dict:
         )
 
         logger.info(f"Reconstrucción: mask={mask_path is not None} applied={applied}")
-        result = {"reconstructed_image": reconstructed,
-                  "confidence_map": confidence_map,
-                  "reconstruction_applied": applied,
-                  "current_agent": "reconstructor"}
+        result = {
+            "reconstructed_image": reconstructed,
+            "confidence_map": confidence_map,
+            "reconstruction_applied": applied,
+            "current_agent": "reconstructor",
+        }
         langfuse_context.update_current_trace(
             output={"reconstruction_applied": applied}
         )
@@ -54,7 +58,5 @@ def reconstructor_node(state: RupestreState) -> dict:
 
     except Exception as exc:
         logger.error(f"Error en reconstructor_node: {exc}")
-        langfuse_context.update_current_trace(
-            output={"error": str(exc)}, level="ERROR"
-        )
+        langfuse_context.update_current_trace(output={"error": str(exc)}, level="ERROR")
         raise AgentExecutionError("reconstructor", str(exc)) from exc

@@ -12,18 +12,14 @@ logger = get_logger("motif_detector")
 @observe(name="yolo_detection")
 def _yolo_span(image: str) -> list[dict]:
     motifs = detect_motifs(image)
-    langfuse_context.update_current_observation(
-        output={"motif_count": len(motifs)}
-    )
+    langfuse_context.update_current_observation(output={"motif_count": len(motifs)})
     return motifs
 
 
 @observe(name="sam_segmentation")
 def _sam_span(image: str, motifs: list[dict]) -> list[dict]:
     segmented = segment_motifs(image, motifs)
-    langfuse_context.update_current_observation(
-        output={"segmented": len(segmented)}
-    )
+    langfuse_context.update_current_observation(output={"segmented": len(segmented)})
     return segmented
 
 
@@ -49,18 +45,17 @@ def motif_detector_node(state: RupestreState) -> dict:
         _annotation_span(enhanced, motifs, settings.output_dir)
 
         logger.info(f"Detectados {len(motifs)} motivos en {enhanced}")
-        result = {"detected_motifs": motifs,
-                  "motif_count": len(motifs),
-                  "current_agent": "motif_detector"}
+        result = {
+            "detected_motifs": motifs,
+            "motif_count": len(motifs),
+            "current_agent": "motif_detector",
+        }
         langfuse_context.update_current_trace(
-            output={"motif_count": len(motifs),
-                    "clases": [m["clase"] for m in motifs]}
+            output={"motif_count": len(motifs), "clases": [m["clase"] for m in motifs]}
         )
         return result
 
     except Exception as exc:
         logger.error(f"Error en motif_detector_node: {exc}")
-        langfuse_context.update_current_trace(
-            output={"error": str(exc)}, level="ERROR"
-        )
+        langfuse_context.update_current_trace(output={"error": str(exc)}, level="ERROR")
         raise AgentExecutionError("motif_detector", str(exc)) from exc

@@ -19,9 +19,7 @@ def _get_model() -> YOLO:
     return _model
 
 
-def detect_motifs(
-    image_path: str, confidence_threshold: float = 0.5
-) -> list[dict]:
+def detect_motifs(image_path: str, confidence_threshold: float = 0.5) -> list[dict]:
     model = _get_model()
     results = model(image_path, conf=confidence_threshold)
 
@@ -51,4 +49,3 @@ def detect_motifs(
                 }
             )
     return motifs
-

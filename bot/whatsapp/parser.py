@@ -15,13 +15,13 @@ def parse_coordinates(text: str) -> tuple[float, float] | None:
     """
     normalized = (
         text.replace("°N", "")
-            .replace("°W", " -")
-            .replace("°S", " -")
-            .replace("°E", "")
-            .replace("lat:", "")
-            .replace("lon:", "")
-            .replace("N", "")
-            .replace("W", "-")
+        .replace("°W", " -")
+        .replace("°S", " -")
+        .replace("°E", "")
+        .replace("lat:", "")
+        .replace("lon:", "")
+        .replace("N", "")
+        .replace("W", "-")
     )
 
     numbers = re.findall(r"-?\d+\.?\d*", normalized)

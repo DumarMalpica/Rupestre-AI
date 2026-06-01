@@ -35,9 +35,7 @@ def mock_pdf(monkeypatch, tmp_path):
         Path(output_path).write_bytes(b"%PDF-1.4 fake")
         return output_path
 
-    monkeypatch.setattr(
-        "agents.heritage_documenter.agent.generate_pdf", _fake_pdf
-    )
+    monkeypatch.setattr("agents.heritage_documenter.agent.generate_pdf", _fake_pdf)
     import core.config as cfg
 
     monkeypatch.setattr(cfg.settings, "output_dir", str(tmp_path))

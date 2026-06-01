@@ -27,8 +27,12 @@ def _make_state(detected_motifs: list[dict] | None = None) -> RupestreState:
     return RupestreState(
         image_path="fake.jpg",
         enhanced_image="fake.jpg",
-        detected_motifs=detected_motifs if detected_motifs is not None else _MOCK_MOTIFS,
-        motif_count=len(detected_motifs) if detected_motifs is not None else len(_MOCK_MOTIFS),
+        detected_motifs=(
+            detected_motifs if detected_motifs is not None else _MOCK_MOTIFS
+        ),
+        motif_count=(
+            len(detected_motifs) if detected_motifs is not None else len(_MOCK_MOTIFS)
+        ),
         session_id="pytest-ag3",
         errors=[],
         current_agent="motif_detector",

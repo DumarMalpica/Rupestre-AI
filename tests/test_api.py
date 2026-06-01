@@ -92,7 +92,9 @@ def test_health_ok(client):
     assert response.json()["status"] == "ok"
 
 
-def test_analyze_with_image(client, mock_graph, test_image_bytes, tmp_path, monkeypatch):
+def test_analyze_with_image(
+    client, mock_graph, test_image_bytes, tmp_path, monkeypatch
+):
     import core.config as cfg
 
     monkeypatch.setattr(cfg.settings, "samples_dir", str(tmp_path / "samples"))
@@ -100,7 +102,11 @@ def test_analyze_with_image(client, mock_graph, test_image_bytes, tmp_path, monk
 
     response = client.post(
         "/api/analyze",
-        data={"site_name": "Cerro Pintado Test", "latitude": "5.53", "longitude": "-73.62"},
+        data={
+            "site_name": "Cerro Pintado Test",
+            "latitude": "5.53",
+            "longitude": "-73.62",
+        },
         files={"image": ("test_rupestre.jpg", test_image_bytes, "image/jpeg")},
     )
 

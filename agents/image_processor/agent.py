@@ -20,9 +20,7 @@ def _quality_span(image_path: str) -> tuple[bool, str]:
 @observe(name="enhance_image")
 def _enhance_span(image_path: str, output_dir: str) -> str:
     enhanced = enhance_image(image_path, output_dir)
-    langfuse_context.update_current_observation(
-        output={"enhanced_path": enhanced}
-    )
+    langfuse_context.update_current_observation(output={"enhanced_path": enhanced})
     return enhanced
 
 
@@ -30,8 +28,10 @@ def _enhance_span(image_path: str, output_dir: str) -> str:
 def image_processor_node(state: RupestreState) -> dict:
     langfuse_context.update_current_trace(
         session_id=state.get("session_id", "default"),
-        input={"image_path": state.get("image_path"),
-               "site_name": state.get("site_name")},
+        input={
+            "image_path": state.get("image_path"),
+            "site_name": state.get("site_name"),
+        },
         tags=["rupestre-ai", "ag1"],
     )
 
@@ -45,21 +45,27 @@ def image_processor_node(state: RupestreState) -> dict:
         if not passed:
             logger.warning(f"Calidad rechazada: {reason}")
             errors.append(reason)
-            result = {"image_quality_ok": False, "enhanced_image": image_path,
-                      "errors": errors, "current_agent": "image_processor"}
+            result = {
+                "image_quality_ok": False,
+                "enhanced_image": image_path,
+                "errors": errors,
+                "current_agent": "image_processor",
+            }
             langfuse_context.update_current_trace(output=result, level="WARNING")
             return result
 
         enhanced = _enhance_span(image_path, settings.output_dir)
         logger.info(f"Imagen realzada → {enhanced}")
-        result = {"image_quality_ok": True, "enhanced_image": enhanced,
-                  "errors": errors, "current_agent": "image_processor"}
+        result = {
+            "image_quality_ok": True,
+            "enhanced_image": enhanced,
+            "errors": errors,
+            "current_agent": "image_processor",
+        }
         langfuse_context.update_current_trace(output=result)
         return result
 
     except Exception as exc:
         logger.error(f"Error en image_processor_node: {exc}")
-        langfuse_context.update_current_trace(
-            output={"error": str(exc)}, level="ERROR"
-        )
+        langfuse_context.update_current_trace(output={"error": str(exc)}, level="ERROR")
         raise AgentExecutionError("image_processor", str(exc)) from exc

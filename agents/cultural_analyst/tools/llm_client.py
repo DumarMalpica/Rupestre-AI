@@ -44,8 +44,6 @@ def get_llm_response(prompt: str) -> str:
             return llm.invoke(prompt).content
 
     except Exception:
-        logger.warning(
-            "LLM provider '%s' falló, usando respuesta mock", provider
-        )
+        logger.warning("LLM provider '%s' falló, usando respuesta mock", provider)
 
     return _MOCK_RESPONSE

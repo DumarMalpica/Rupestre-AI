@@ -6,9 +6,7 @@ from pathlib import Path
 import cv2
 
 
-def annotate_image(
-    image_path: str, motifs: list[dict], output_dir: str
-) -> str:
+def annotate_image(image_path: str, motifs: list[dict], output_dir: str) -> str:
     if not motifs or not os.path.exists(image_path):
         return image_path
 

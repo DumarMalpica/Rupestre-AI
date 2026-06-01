@@ -47,6 +47,7 @@ def _make_state(image_path: str) -> RupestreState:
 
 def test_valid_image_passes_quality(valid_image, tmp_path, monkeypatch):
     import core.config as cfg
+
     monkeypatch.setattr(cfg.settings, "output_dir", str(tmp_path))
     result = image_processor_node(_make_state(valid_image))
     assert result["image_quality_ok"] is True
@@ -54,6 +55,7 @@ def test_valid_image_passes_quality(valid_image, tmp_path, monkeypatch):
 
 def test_enhanced_image_not_none(valid_image, tmp_path, monkeypatch):
     import core.config as cfg
+
     monkeypatch.setattr(cfg.settings, "output_dir", str(tmp_path))
     result = image_processor_node(_make_state(valid_image))
     enhanced = result.get("enhanced_image")
@@ -63,6 +65,7 @@ def test_enhanced_image_not_none(valid_image, tmp_path, monkeypatch):
 
 def test_no_foreign_fields(valid_image, tmp_path, monkeypatch):
     import core.config as cfg
+
     monkeypatch.setattr(cfg.settings, "output_dir", str(tmp_path))
     result = image_processor_node(_make_state(valid_image))
     assert "detected_motifs" not in result
@@ -77,6 +80,7 @@ def test_missing_file_no_crash():
 
 def test_small_image_fails(small_image, tmp_path, monkeypatch):
     import core.config as cfg
+
     monkeypatch.setattr(cfg.settings, "output_dir", str(tmp_path))
     result = image_processor_node(_make_state(small_image))
     assert result["image_quality_ok"] is False

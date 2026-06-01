@@ -2,6 +2,7 @@
 AG6 — Heritage Documenter: PDF Generator
 Genera ficha ICANH profesional usando ReportLab.
 """
+
 import os
 from datetime import datetime, timezone
 
@@ -20,15 +21,15 @@ from reportlab.platypus import (
 )
 
 # ── Paleta de colores ──────────────────────────────────────────────────────────
-DARK       = colors.HexColor("#1a1a2e")
-PRIMARY    = colors.HexColor("#c0392b")   # rojo ICANH
-ACCENT     = colors.HexColor("#e67e22")   # naranja paralelos
+DARK = colors.HexColor("#1a1a2e")
+PRIMARY = colors.HexColor("#c0392b")  # rojo ICANH
+ACCENT = colors.HexColor("#e67e22")  # naranja paralelos
 LIGHT_GRAY = colors.HexColor("#f5f5f5")
-MID_GRAY   = colors.HexColor("#e0e0e0")
-TEXT_GRAY  = colors.HexColor("#666666")
-WHITE      = colors.white
-TEAL       = colors.HexColor("#16a085")   # confianza alta
-WARM_BG    = colors.HexColor("#fef9f0")   # fondo interpretación
+MID_GRAY = colors.HexColor("#e0e0e0")
+TEXT_GRAY = colors.HexColor("#666666")
+WHITE = colors.white
+TEAL = colors.HexColor("#16a085")  # confianza alta
+WARM_BG = colors.HexColor("#fef9f0")  # fondo interpretación
 
 
 W, H = A4
@@ -39,19 +40,94 @@ MARGIN = 18 * mm
 def _styles():
     base = ParagraphStyle
     return {
-        "title":      base("title",      fontName="Helvetica-Bold",   fontSize=18, textColor=DARK,      leading=22),
-        "subtitle":   base("subtitle",   fontName="Helvetica",        fontSize=9,  textColor=TEXT_GRAY, leading=12),
-        "section":    base("section",    fontName="Helvetica-Bold",   fontSize=8,  textColor=TEXT_GRAY, leading=10, spaceAfter=4),
-        "card_label": base("card_label", fontName="Helvetica",        fontSize=7,  textColor=TEXT_GRAY, leading=9,  spaceAfter=1),
-        "card_value": base("card_value", fontName="Helvetica-Bold",   fontSize=11, textColor=DARK,      leading=14),
-        "body":       base("body",       fontName="Helvetica",        fontSize=9,  textColor=DARK,      leading=13),
-        "cite":       base("cite",       fontName="Helvetica-Oblique",fontSize=8,  textColor=TEXT_GRAY, leading=11),
-        "metric_val": base("metric_val", fontName="Helvetica-Bold",   fontSize=20, textColor=PRIMARY,   leading=24, alignment=TA_CENTER),
-        "metric_lbl": base("metric_lbl", fontName="Helvetica",        fontSize=7,  textColor=TEXT_GRAY, leading=9,  alignment=TA_CENTER),
-        "motif_name": base("motif_name", fontName="Helvetica-Bold",   fontSize=10, textColor=DARK,      leading=13),
-        "motif_conf": base("motif_conf", fontName="Helvetica",        fontSize=8,  textColor=PRIMARY,   leading=10),
-        "footer":     base("footer",     fontName="Helvetica",        fontSize=7,  textColor=TEXT_GRAY, leading=9,  alignment=TA_CENTER),
-        "alert":      base("alert",      fontName="Helvetica-Bold",   fontSize=9,  textColor=colors.HexColor("#7d4c00"), leading=12),
+        "title": base(
+            "title", fontName="Helvetica-Bold", fontSize=18, textColor=DARK, leading=22
+        ),
+        "subtitle": base(
+            "subtitle",
+            fontName="Helvetica",
+            fontSize=9,
+            textColor=TEXT_GRAY,
+            leading=12,
+        ),
+        "section": base(
+            "section",
+            fontName="Helvetica-Bold",
+            fontSize=8,
+            textColor=TEXT_GRAY,
+            leading=10,
+            spaceAfter=4,
+        ),
+        "card_label": base(
+            "card_label",
+            fontName="Helvetica",
+            fontSize=7,
+            textColor=TEXT_GRAY,
+            leading=9,
+            spaceAfter=1,
+        ),
+        "card_value": base(
+            "card_value",
+            fontName="Helvetica-Bold",
+            fontSize=11,
+            textColor=DARK,
+            leading=14,
+        ),
+        "body": base(
+            "body", fontName="Helvetica", fontSize=9, textColor=DARK, leading=13
+        ),
+        "cite": base(
+            "cite",
+            fontName="Helvetica-Oblique",
+            fontSize=8,
+            textColor=TEXT_GRAY,
+            leading=11,
+        ),
+        "metric_val": base(
+            "metric_val",
+            fontName="Helvetica-Bold",
+            fontSize=20,
+            textColor=PRIMARY,
+            leading=24,
+            alignment=TA_CENTER,
+        ),
+        "metric_lbl": base(
+            "metric_lbl",
+            fontName="Helvetica",
+            fontSize=7,
+            textColor=TEXT_GRAY,
+            leading=9,
+            alignment=TA_CENTER,
+        ),
+        "motif_name": base(
+            "motif_name",
+            fontName="Helvetica-Bold",
+            fontSize=10,
+            textColor=DARK,
+            leading=13,
+        ),
+        "motif_conf": base(
+            "motif_conf",
+            fontName="Helvetica",
+            fontSize=8,
+            textColor=PRIMARY,
+            leading=10,
+        ),
+        "footer": base(
+            "footer",
+            fontName="Helvetica",
+            fontSize=7,
+            textColor=TEXT_GRAY,
+            leading=9,
+            alignment=TA_CENTER,
+        ),
+        "alert": base(
+            "alert",
+            fontName="Helvetica-Bold",
+            fontSize=9,
+            textColor=colors.HexColor("#7d4c00"),
+            leading=12,
+        ),
     }
 
 
@@ -70,7 +146,7 @@ def _card_table(pairs: list[tuple[str, str]], ST: dict, cols: int = 2) -> Table:
     rows = []
     for i in range(0, len(pairs), cols):
         row = []
-        for label, value in pairs[i:i + cols]:
+        for label, value in pairs[i : i + cols]:
             cell = [
                 Paragraph(label, ST["card_label"]),
                 Paragraph(str(value), ST["card_value"]),
@@ -82,16 +158,20 @@ def _card_table(pairs: list[tuple[str, str]], ST: dict, cols: int = 2) -> Table:
         rows.append(row)
 
     t = Table(rows, colWidths=[cell_w] * cols, hAlign="LEFT")
-    t.setStyle(TableStyle([
-        ("BACKGROUND",   (0, 0), (-1, -1), LIGHT_GRAY),
-        ("BOX",          (0, 0), (-1, -1), 0.5, MID_GRAY),
-        ("INNERGRID",    (0, 0), (-1, -1), 0.5, WHITE),
-        ("TOPPADDING",   (0, 0), (-1, -1), 8),
-        ("BOTTOMPADDING",(0, 0), (-1, -1), 8),
-        ("LEFTPADDING",  (0, 0), (-1, -1), 10),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 10),
-        ("VALIGN",       (0, 0), (-1, -1), "TOP"),
-    ]))
+    t.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), LIGHT_GRAY),
+                ("BOX", (0, 0), (-1, -1), 0.5, MID_GRAY),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, WHITE),
+                ("TOPPADDING", (0, 0), (-1, -1), 8),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                ("LEFTPADDING", (0, 0), (-1, -1), 10),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
+    )
     return t
 
 
@@ -99,20 +179,24 @@ def _confidence_bar(confidence: float, width: float = 80) -> Table:
     """Barra visual de confianza (roja como en el diseño)."""
     pct = max(0.0, min(1.0, confidence))
     filled = width * pct
-    empty  = width - filled
+    empty = width - filled
     bar = Table(
         [["", ""]],
         colWidths=[filled, empty] if empty > 0 else [width, 0.001],
         rowHeights=[4],
     )
-    bar.setStyle(TableStyle([
-        ("BACKGROUND",    (0, 0), (0, 0), PRIMARY),
-        ("BACKGROUND",    (1, 0), (1, 0), MID_GRAY),
-        ("TOPPADDING",    (0, 0), (-1, -1), 0),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 0),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 0),
-    ]))
+    bar.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (0, 0), PRIMARY),
+                ("BACKGROUND", (1, 0), (1, 0), MID_GRAY),
+                ("TOPPADDING", (0, 0), (-1, -1), 0),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+            ]
+        )
+    )
     return bar
 
 
@@ -123,10 +207,10 @@ def _motifs_grid(motifs: list[dict], ST: dict) -> Table:
     rows = []
     for i in range(0, len(motifs), cols):
         row_data = []
-        for m in motifs[i:i + cols]:
-            conf  = m.get("confidence", 0.0)
+        for m in motifs[i : i + cols]:
+            conf = m.get("confidence", 0.0)
             clase = m.get("clase", "Desconocido").replace("_", " ").title()
-            cell  = [
+            cell = [
                 Paragraph("MOTIVO", ST["card_label"]),
                 Paragraph(clase, ST["motif_name"]),
                 Spacer(1, 2),
@@ -140,16 +224,20 @@ def _motifs_grid(motifs: list[dict], ST: dict) -> Table:
         rows.append(row_data)
 
     t = Table(rows, colWidths=[cell_w] * cols, hAlign="LEFT")
-    t.setStyle(TableStyle([
-        ("BACKGROUND",    (0, 0), (-1, -1), LIGHT_GRAY),
-        ("BOX",           (0, 0), (-1, -1), 0.5, MID_GRAY),
-        ("INNERGRID",     (0, 0), (-1, -1), 0.5, WHITE),
-        ("TOPPADDING",    (0, 0), (-1, -1), 8),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 10),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 6),
-        ("VALIGN",        (0, 0), (-1, -1), "TOP"),
-    ]))
+    t.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), LIGHT_GRAY),
+                ("BOX", (0, 0), (-1, -1), 0.5, MID_GRAY),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, WHITE),
+                ("TOPPADDING", (0, 0), (-1, -1), 8),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                ("LEFTPADDING", (0, 0), (-1, -1), 10),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
+    )
     return t
 
 
@@ -161,42 +249,55 @@ def _parallels_table(similar_motifs: list[dict], ST: dict) -> Table:
             all_matches.append(match)
 
     if not all_matches:
-        return Paragraph("No se encontraron paralelos iconográficos regionales.", ST["body"])
+        return Paragraph(
+            "No se encontraron paralelos iconográficos regionales.", ST["body"]
+        )
 
     col_w = W - 2 * MARGIN
     rows = []
     for m in all_matches:
-        site    = m.get("site", "Desconocido")
+        site = m.get("site", "Desconocido")
         cultura = m.get("cultura", "")
         periodo = m.get("periodo", "")
-        score   = m.get("score", 0.0)
+        score = m.get("score", 0.0)
 
-        left  = [
+        left = [
             Paragraph(f"<b>{site}</b>", ST["body"]),
             Paragraph(f"{cultura} · {periodo}", ST["cite"]),
         ]
-        right = Paragraph(f"<b>{score:.2f}</b>", ParagraphStyle(
-            "score", fontName="Helvetica-Bold", fontSize=12,
-            textColor=TEAL, alignment=TA_RIGHT
-        ))
+        right = Paragraph(
+            f"<b>{score:.2f}</b>",
+            ParagraphStyle(
+                "score",
+                fontName="Helvetica-Bold",
+                fontSize=12,
+                textColor=TEAL,
+                alignment=TA_RIGHT,
+            ),
+        )
         rows.append([left, right])
 
     t = Table(rows, colWidths=[col_w * 0.80, col_w * 0.20], hAlign="LEFT")
-    t.setStyle(TableStyle([
-        ("BACKGROUND",    (0, 0), (-1, -1), LIGHT_GRAY),
-        ("BOX",           (0, 0), (-1, -1), 0.5, MID_GRAY),
-        ("LINEBELOW",     (0, 0), (-1, -2), 0.5, WHITE),
-        ("TOPPADDING",    (0, 0), (-1, -1), 8),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 12),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 12),
-        ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
-    ]))
+    t.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), LIGHT_GRAY),
+                ("BOX", (0, 0), (-1, -1), 0.5, MID_GRAY),
+                ("LINEBELOW", (0, 0), (-1, -2), 0.5, WHITE),
+                ("TOPPADDING", (0, 0), (-1, -1), 8),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                ("LEFTPADDING", (0, 0), (-1, -1), 12),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ]
+        )
+    )
     return t
 
 
-def _metrics_row(motif_count: int, confidence: float,
-                 n_parallels: int, ST: dict) -> Table:
+def _metrics_row(
+    motif_count: int, confidence: float, n_parallels: int, ST: dict
+) -> Table:
     """Fila de métricas técnicas al estilo del diseño."""
     col_w = (W - 2 * MARGIN) / 4
 
@@ -207,21 +308,25 @@ def _metrics_row(motif_count: int, confidence: float,
         ]
 
     row = [
-        metric_cell(str(motif_count),         "MOTIVOS\nDETECTADOS"),
-        metric_cell(f"{confidence:.2f}",      "CONFIANZA\nRAG"),
-        metric_cell(str(n_parallels),         "PARALELOS\nREGIONALES"),
-        metric_cell("< 45 min",               "TIEMPO DE\nANÁLISIS"),
+        metric_cell(str(motif_count), "MOTIVOS\nDETECTADOS"),
+        metric_cell(f"{confidence:.2f}", "CONFIANZA\nRAG"),
+        metric_cell(str(n_parallels), "PARALELOS\nREGIONALES"),
+        metric_cell("< 45 min", "TIEMPO DE\nANÁLISIS"),
     ]
     t = Table([row], colWidths=[col_w] * 4, hAlign="LEFT")
-    t.setStyle(TableStyle([
-        ("BACKGROUND",    (0, 0), (-1, -1), LIGHT_GRAY),
-        ("BOX",           (0, 0), (-1, -1), 0.5, MID_GRAY),
-        ("INNERGRID",     (0, 0), (-1, -1), 0.5, WHITE),
-        ("TOPPADDING",    (0, 0), (-1, -1), 10),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
-        ("ALIGN",         (0, 0), (-1, -1), "CENTER"),
-        ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
-    ]))
+    t.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), LIGHT_GRAY),
+                ("BOX", (0, 0), (-1, -1), 0.5, MID_GRAY),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, WHITE),
+                ("TOPPADDING", (0, 0), (-1, -1), 10),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ]
+        )
+    )
     return t
 
 
@@ -242,26 +347,28 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     doc = SimpleDocTemplate(
         output_path,
         pagesize=A4,
-        leftMargin=MARGIN, rightMargin=MARGIN,
-        topMargin=15 * mm, bottomMargin=15 * mm,
+        leftMargin=MARGIN,
+        rightMargin=MARGIN,
+        topMargin=15 * mm,
+        bottomMargin=15 * mm,
         title="Ficha de Registro Rupestre ICANH",
         author="Rupestre AI — UPTC 2026",
     )
 
     # Datos del estado
-    record_id    = ficha.get("record_id", "N/A")
-    site_name    = ficha.get("site_name", "Sin nombre")
-    coords       = ficha.get("coordinates", (0.0, 0.0))
-    dept         = ficha.get("department", "No especificado")
+    record_id = ficha.get("record_id", "N/A")
+    site_name = ficha.get("site_name", "Sin nombre")
+    coords = ficha.get("coordinates", (0.0, 0.0))
+    dept = ficha.get("department", "No especificado")
     municipality = ficha.get("municipality", "No especificado")
-    motif_count  = ficha.get("motif_count", 0)
-    motifs       = ficha.get("detected_motifs", [])
-    similar      = ficha.get("similar_motifs", [])
-    has_parallels= ficha.get("has_regional_parallels", False)
-    interp       = ficha.get("cultural_interpretation", "")
-    sources      = ficha.get("cited_sources", [])
-    confidence   = ficha.get("interpretation_confidence", 0.0)
-    now_str      = datetime.now(timezone.utc).strftime("%d %b %Y · %H:%M UTC")
+    motif_count = ficha.get("motif_count", 0)
+    motifs = ficha.get("detected_motifs", [])
+    similar = ficha.get("similar_motifs", [])
+    has_parallels = ficha.get("has_regional_parallels", False)
+    interp = ficha.get("cultural_interpretation", "")
+    sources = ficha.get("cited_sources", [])
+    confidence = ficha.get("interpretation_confidence", 0.0)
+    now_str = datetime.now(timezone.utc).strftime("%d %b %Y · %H:%M UTC")
 
     # Contar paralelos totales
     n_parallels = sum(len(sm.get("top_matches", [])) for sm in similar)
@@ -269,29 +376,35 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     story = []
 
     # ── ENCABEZADO ────────────────────────────────────────────────────────────
-    header_data = [[
+    header_data = [
         [
-            Paragraph("Ficha de Registro ICANH", ST["title"]),
-            Paragraph("Sistema Rupestre AI · UPTC 2026", ST["subtitle"]),
-        ],
-        [
-            Paragraph(f"<b>ID</b>  {record_id}", ST["body"]),
-            Paragraph(now_str, ST["subtitle"]),
-        ],
-    ]]
+            [
+                Paragraph("Ficha de Registro ICANH", ST["title"]),
+                Paragraph("Sistema Rupestre AI · UPTC 2026", ST["subtitle"]),
+            ],
+            [
+                Paragraph(f"<b>ID</b>  {record_id}", ST["body"]),
+                Paragraph(now_str, ST["subtitle"]),
+            ],
+        ]
+    ]
     header_table = Table(
         header_data,
         colWidths=[(W - 2 * MARGIN) * 0.65, (W - 2 * MARGIN) * 0.35],
     )
-    header_table.setStyle(TableStyle([
-        ("BACKGROUND",    (0, 0), (-1, -1), DARK),
-        ("TOPPADDING",    (0, 0), (-1, -1), 12),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 14),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 14),
-        ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
-        ("ALIGN",         (1, 0), (1, 0),   "RIGHT"),
-    ]))
+    header_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), DARK),
+                ("TOPPADDING", (0, 0), (-1, -1), 12),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
+                ("LEFTPADDING", (0, 0), (-1, -1), 14),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 14),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("ALIGN", (1, 0), (1, 0), "RIGHT"),
+            ]
+        )
+    )
     # Forzar color de texto blanco en el header
     for s in [ST["title"], ST["subtitle"], ST["body"]]:
         s.textColor = WHITE
@@ -302,39 +415,51 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
 
     # ── BANNER DE ALERTA (si hay paralelos) ──────────────────────────────────
     if has_parallels:
-        alert_text = (f"● Paralelos iconográficos regionales encontrados — "
-                      f"<b>{n_parallels} sitios</b> con similitud > 0.80")
+        alert_text = (
+            f"● Paralelos iconográficos regionales encontrados — "
+            f"<b>{n_parallels} sitios</b> con similitud > 0.80"
+        )
         alert_table = Table(
             [[Paragraph(alert_text, ST["alert"])]],
             colWidths=[W - 2 * MARGIN],
         )
-        alert_table.setStyle(TableStyle([
-            ("BACKGROUND",    (0, 0), (-1, -1), colors.HexColor("#fff3cd")),
-            ("BOX",           (0, 0), (-1, -1), 1, colors.HexColor("#f0ad4e")),
-            ("TOPPADDING",    (0, 0), (-1, -1), 8),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
-            ("LEFTPADDING",   (0, 0), (-1, -1), 12),
-        ]))
+        alert_table.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#fff3cd")),
+                    ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#f0ad4e")),
+                    ("TOPPADDING", (0, 0), (-1, -1), 8),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 12),
+                ]
+            )
+        )
         story.append(Spacer(1, 4 * mm))
         story.append(alert_table)
 
     # ── IDENTIFICACIÓN DEL SITIO ──────────────────────────────────────────────
     story += _section_header("Identificación del sitio", ST)
     coord_str = f"{coords[0]:.3f}°N,  {coords[1]:.3f}°W"
-    story.append(_card_table([
-        ("SITIO RUPESTRE",       site_name),
-        ("DEPARTAMENTO",         dept),
-        ("COORDENADAS GPS",      coord_str),
-        ("MUNICIPIO",            municipality),
-    ], ST, cols=2))
+    story.append(
+        _card_table(
+            [
+                ("SITIO RUPESTRE", site_name),
+                ("DEPARTAMENTO", dept),
+                ("COORDENADAS GPS", coord_str),
+                ("MUNICIPIO", municipality),
+            ],
+            ST,
+            cols=2,
+        )
+    )
 
     # ── GALERÍA DE IMÁGENES ───────────────────────────────────────────────────
     story += _section_header("Galería de imágenes", ST)
     images_info = ficha.get("images", {})
     gallery_labels = [
         ("Original\ncaptura de campo", images_info.get("original", "N/A")),
-        ("Realzada\nDStretch-LAB",      images_info.get("enhanced", "N/A")),
-        ("Reconstruida\nDeepFillv2",    images_info.get("reconstructed", "N/A")),
+        ("Realzada\nDStretch-LAB", images_info.get("enhanced", "N/A")),
+        ("Reconstruida\nDeepFillv2", images_info.get("reconstructed", "N/A")),
     ]
     col_w = (W - 2 * MARGIN) / 3
 
@@ -354,35 +479,62 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
                 pass
         if not loaded:
             placeholder = Table(
-                [[Paragraph("PICTOGRAFÍA", ParagraphStyle(
-                    "ph", fontName="Helvetica", fontSize=8,
-                    textColor=TEXT_GRAY, alignment=TA_CENTER))]],
-                colWidths=[col_w - 6], rowHeights=[40 * mm],
+                [
+                    [
+                        Paragraph(
+                            "PICTOGRAFÍA",
+                            ParagraphStyle(
+                                "ph",
+                                fontName="Helvetica",
+                                fontSize=8,
+                                textColor=TEXT_GRAY,
+                                alignment=TA_CENTER,
+                            ),
+                        )
+                    ]
+                ],
+                colWidths=[col_w - 6],
+                rowHeights=[40 * mm],
             )
-            placeholder.setStyle(TableStyle([
-                ("BACKGROUND",    (0, 0), (-1, -1), MID_GRAY),
-                ("VALIGN",        (0, 0), (-1, -1), "MIDDLE"),
-                ("ALIGN",         (0, 0), (-1, -1), "CENTER"),
-            ]))
+            placeholder.setStyle(
+                TableStyle(
+                    [
+                        ("BACKGROUND", (0, 0), (-1, -1), MID_GRAY),
+                        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ]
+                )
+            )
             cell_content.append(placeholder)
 
         cell_content.append(Spacer(1, 2))
-        cell_content.append(Paragraph(label, ParagraphStyle(
-            "img_lbl", fontName="Helvetica", fontSize=7,
-            textColor=TEXT_GRAY, alignment=TA_CENTER, leading=9
-        )))
+        cell_content.append(
+            Paragraph(
+                label,
+                ParagraphStyle(
+                    "img_lbl",
+                    fontName="Helvetica",
+                    fontSize=7,
+                    textColor=TEXT_GRAY,
+                    alignment=TA_CENTER,
+                    leading=9,
+                ),
+            )
+        )
         gallery_cells.append(cell_content)
 
-    gallery_table = Table(
-        [gallery_cells], colWidths=[col_w] * 3, hAlign="LEFT"
+    gallery_table = Table([gallery_cells], colWidths=[col_w] * 3, hAlign="LEFT")
+    gallery_table.setStyle(
+        TableStyle(
+            [
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("LEFTPADDING", (0, 0), (-1, -1), 3),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 3),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
     )
-    gallery_table.setStyle(TableStyle([
-        ("TOPPADDING",    (0, 0), (-1, -1), 4),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 3),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 3),
-        ("VALIGN",        (0, 0), (-1, -1), "TOP"),
-    ]))
     story.append(gallery_table)
 
     # ── MOTIVOS DETECTADOS ────────────────────────────────────────────────────
@@ -404,14 +556,18 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
         [[Paragraph(interp_safe, ST["body"])]],
         colWidths=[W - 2 * MARGIN],
     )
-    interp_table.setStyle(TableStyle([
-        ("BACKGROUND",    (0, 0), (-1, -1), WARM_BG),
-        ("BOX",           (0, 0), (-1, -1), 0.5, colors.HexColor("#f0d9a0")),
-        ("TOPPADDING",    (0, 0), (-1, -1), 10),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
-        ("LEFTPADDING",   (0, 0), (-1, -1), 12),
-        ("RIGHTPADDING",  (0, 0), (-1, -1), 12),
-    ]))
+    interp_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), WARM_BG),
+                ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#f0d9a0")),
+                ("TOPPADDING", (0, 0), (-1, -1), 10),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+                ("LEFTPADDING", (0, 0), (-1, -1), 12),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+            ]
+        )
+    )
     story.append(interp_table)
 
     # Fuentes citadas
@@ -419,9 +575,9 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
         story.append(Spacer(1, 3 * mm))
         for src in sources:
             author = src.get("author", "")
-            year   = src.get("year", "")
-            title  = src.get("title", "")
-            txt    = f"■  {author} ({year}). <i>{title}</i>."
+            year = src.get("year", "")
+            title = src.get("title", "")
+            txt = f"■  {author} ({year}). <i>{title}</i>."
             txt_safe = txt.encode("latin-1", "replace").decode("latin-1")
             story.append(Paragraph(txt_safe, ST["cite"]))
             story.append(Spacer(1, 1 * mm))
@@ -434,18 +590,26 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     story.append(Spacer(1, 6 * mm))
     story.append(HRFlowable(width="100%", thickness=0.5, color=MID_GRAY))
     story.append(Spacer(1, 2 * mm))
-    footer_data = [[
-        Paragraph("Rupestre AI · UPTC · En coordinación con el ICANH", ST["footer"]),
-        Paragraph(f"ID: {record_id} · v1.0.0", ST["footer"]),
-    ]]
+    footer_data = [
+        [
+            Paragraph(
+                "Rupestre AI · UPTC · En coordinación con el ICANH", ST["footer"]
+            ),
+            Paragraph(f"ID: {record_id} · v1.0.0", ST["footer"]),
+        ]
+    ]
     footer_table = Table(
         footer_data,
         colWidths=[(W - 2 * MARGIN) * 0.6, (W - 2 * MARGIN) * 0.4],
     )
-    footer_table.setStyle(TableStyle([
-        ("ALIGN",  (1, 0), (1, 0), "RIGHT"),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-    ]))
+    footer_table.setStyle(
+        TableStyle(
+            [
+                ("ALIGN", (1, 0), (1, 0), "RIGHT"),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ]
+        )
+    )
     story.append(footer_table)
 
     doc.build(story)

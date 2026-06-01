@@ -7,10 +7,13 @@ def build_prompt(
     site_name: str,
     coordinates: tuple,
 ) -> str:
-    motif_lines = "\n".join(
-        f"  - {m['clase']} (confianza: {m['confidence']:.2f})"
-        for m in detected_motifs
-    ) or "  (ninguno detectado)"
+    motif_lines = (
+        "\n".join(
+            f"  - {m['clase']} (confianza: {m['confidence']:.2f})"
+            for m in detected_motifs
+        )
+        or "  (ninguno detectado)"
+    )
 
     parallel_lines: list[str] = []
     for entry in similar_motifs:

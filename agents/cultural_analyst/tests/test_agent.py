@@ -6,13 +6,27 @@ from agents.cultural_analyst.agent import cultural_analyst_node
 from core.state import RupestreState
 
 _MOTIFS = [
-    {"id": "motif_001", "clase": "espiral", "confidence": 0.91,
-     "bbox": [120, 80, 340, 290], "crop_path": None, "mask": None},
+    {
+        "id": "motif_001",
+        "clase": "espiral",
+        "confidence": 0.91,
+        "bbox": [120, 80, 340, 290],
+        "crop_path": None,
+        "mask": None,
+    },
 ]
 _SIMILAR = [
-    {"motif_id": "motif_001", "top_matches": [
-        {"site": "Villa de Leyva", "score": 0.88, "cultura": "Muisca", "periodo": "600-1600 d.C."}
-    ]},
+    {
+        "motif_id": "motif_001",
+        "top_matches": [
+            {
+                "site": "Villa de Leyva",
+                "score": 0.88,
+                "cultura": "Muisca",
+                "periodo": "600-1600 d.C.",
+            }
+        ],
+    },
 ]
 
 
@@ -61,6 +75,7 @@ def test_mock_no_external_calls(monkeypatch):
 
     try:
         import requests
+
         monkeypatch.setattr(requests, "post", _assert_not_called)
     except ImportError:
         pass  # requests no instalado → imposible llamar HTTP

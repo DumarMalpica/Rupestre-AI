@@ -94,7 +94,9 @@ async def handle_message(
                 send_message(phone, MSGS["ask_site"])
             except Exception as exc:
                 logger.error(f"Error descargando imagen: {exc}")
-                send_message(phone, "❌ No pude descargar la imagen. Intenta enviarla de nuevo.")
+                send_message(
+                    phone, "❌ No pude descargar la imagen. Intenta enviarla de nuevo."
+                )
         else:
             send_message(phone, MSGS["welcome"])
         return
@@ -102,7 +104,9 @@ async def handle_message(
     # ── WAITING_SITE_NAME ─────────────────────────────────────────────────────
     if session.state == "WAITING_SITE_NAME":
         if len(body_clean) < 3:
-            send_message(phone, "Por favor escribe el nombre del sitio (mínimo 3 caracteres).")
+            send_message(
+                phone, "Por favor escribe el nombre del sitio (mínimo 3 caracteres)."
+            )
             return
         session.site_name = body_clean.title()
         session.state = "WAITING_MUNICIPALITY"
