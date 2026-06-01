@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from ultralytics import YOLO
 
@@ -19,11 +20,13 @@ def _get_model() -> YOLO:
     return _model
 
 
-def detect_motifs(image_path: str, confidence_threshold: float = 0.5) -> list[dict]:
+def detect_motifs(
+    image_path: str, confidence_threshold: float = 0.5
+) -> list[dict[str, Any]]:
     model = _get_model()
     results = model(image_path, conf=confidence_threshold)
 
-    motifs = []
+    motifs: list[dict[str, Any]] = []
     for result in results:
         boxes = result.boxes
         for i, box in enumerate(boxes):

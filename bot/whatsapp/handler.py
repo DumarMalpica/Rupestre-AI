@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import os
 import uuid
+from typing import Any
 
 from bot.whatsapp.conversation import ConversationSession, get_session, reset_session
 from bot.whatsapp.downloader import download_whatsapp_image
@@ -160,7 +161,7 @@ async def _run_pipeline(phone: str, session: ConversationSession) -> None:
         railway_url = f"https://{railway_url}"
 
     try:
-        state = {
+        state: dict[str, Any] = {
             "image_path": session.image_path,
             "site_name": session.site_name,
             "coordinates": (session.latitude, session.longitude),

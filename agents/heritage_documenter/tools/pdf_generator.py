@@ -4,6 +4,7 @@ Genera ficha ICANH profesional usando ReportLab.
 """
 
 import os
+from typing import Any
 from datetime import datetime, timezone
 
 from reportlab.lib import colors
@@ -143,9 +144,9 @@ def _section_header(title: str, ST: dict) -> list:
 def _card_table(pairs: list[tuple[str, str]], ST: dict, cols: int = 2) -> Table:
     """Genera tabla de tarjetas tipo card-grid."""
     cell_w = (W - 2 * MARGIN) / cols
-    rows = []
+    rows: list[list[list[Any]]] = []
     for i in range(0, len(pairs), cols):
-        row = []
+        row: list[list[Any]] = []
         for label, value in pairs[i : i + cols]:
             cell = [
                 Paragraph(label, ST["card_label"]),
@@ -154,7 +155,7 @@ def _card_table(pairs: list[tuple[str, str]], ST: dict, cols: int = 2) -> Table:
             row.append(cell)
         # rellenar si la fila está incompleta
         while len(row) < cols:
-            row.append("")
+            row.append([])
         rows.append(row)
 
     t = Table(rows, colWidths=[cell_w] * cols, hAlign="LEFT")
@@ -204,9 +205,9 @@ def _motifs_grid(motifs: list[dict], ST: dict) -> Table:
     """Grid de tarjetas de motivos con barra de confianza."""
     cols = 4
     cell_w = (W - 2 * MARGIN) / cols
-    rows = []
+    rows: list[list[list[Any]]] = []
     for i in range(0, len(motifs), cols):
-        row_data = []
+        row_data: list[list[Any]] = []
         for m in motifs[i : i + cols]:
             conf = m.get("confidence", 0.0)
             clase = m.get("clase", "Desconocido").replace("_", " ").title()
@@ -220,7 +221,7 @@ def _motifs_grid(motifs: list[dict], ST: dict) -> Table:
             ]
             row_data.append(cell)
         while len(row_data) < cols:
-            row_data.append("")
+            row_data.append([])
         rows.append(row_data)
 
     t = Table(rows, colWidths=[cell_w] * cols, hAlign="LEFT")
