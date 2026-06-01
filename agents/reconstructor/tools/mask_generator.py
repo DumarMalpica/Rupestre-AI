@@ -14,7 +14,7 @@ def generate_mask(image_path: str) -> str | None:
     if img is None:
         return None
 
-    h, w = img.shape
+    h, w = img.shape[:2]
 
     # Varianza local del Laplaciano en ventanas 16x16
     lap = cv2.Laplacian(img, cv2.CV_64F)
