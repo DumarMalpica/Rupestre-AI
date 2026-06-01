@@ -23,6 +23,9 @@ def _get_model() -> YOLO:
 def detect_motifs(
     image_path: str, confidence_threshold: float = 0.5
 ) -> list[dict[str, Any]]:
+    if not image_path or not os.path.exists(image_path):
+        return []
+
     model = _get_model()
     results = model(image_path, conf=confidence_threshold)
 
