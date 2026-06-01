@@ -13,7 +13,7 @@ WORKDIR /app
 
 ENV PYTHONPATH=/app
 
-RUN pip install --no-cache-dir torch \
+RUN pip install --no-cache-dir torch torchvision \
     --index-url https://download.pytorch.org/whl/cpu
 
 COPY requirements.txt .
