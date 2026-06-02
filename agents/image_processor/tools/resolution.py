@@ -37,8 +37,8 @@ def maybe_upscale_to_min_resolution(
     if scale > max_upscale_factor:
         return image_path, False
 
-    new_w = max(1, int(round(w * scale)))
-    new_h = max(1, int(round(h * scale)))
+    new_w = max(1, math.ceil(w * scale))
+    new_h = max(1, math.ceil(h * scale))
 
     upscaled = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_CUBIC)
     os.makedirs(output_dir, exist_ok=True)
