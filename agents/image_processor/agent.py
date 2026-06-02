@@ -26,9 +26,7 @@ def _resolution_span(image_path: str, output_dir: str) -> str:
         min_area=settings.min_image_resolution,
         max_upscale_factor=settings.max_upscale_factor,
     )
-    langfuse_context.update_current_observation(
-        output={"upscaled": was_upscaled}
-    )
+    langfuse_context.update_current_observation(output={"upscaled": was_upscaled})
     return upscaled_path
 
 

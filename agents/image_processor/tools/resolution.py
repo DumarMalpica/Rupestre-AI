@@ -49,4 +49,3 @@ def maybe_upscale_to_min_resolution(
     if not ok:
         return image_path, False
     return out_path, True
-
