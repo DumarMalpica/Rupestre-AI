@@ -19,6 +19,9 @@ RUN pip install --no-cache-dir torch torchvision \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# LaMa inpainting (instalado sin sus deps conflictivas)
+RUN pip install --no-cache-dir lama-cleaner --no-deps
+
 COPY . .
 
 RUN mkdir -p data/fichas data/samples data/chroma data/icanh_docs
