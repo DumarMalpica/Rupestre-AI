@@ -12,11 +12,15 @@ class Settings(BaseSettings):
     samples_dir: str = "./data/samples"
     min_image_resolution: int = 1_000_000  # 1MP
     max_upscale_factor: float = 4.0  # evita inflar imágenes extremadamente pequeñas
-    blur_threshold: float = 100.0
+    blur_threshold: float = 30.0
     hitl_confidence_threshold: float = 0.6
     langfuse_public_key: str = ""
     langfuse_secret_key: str = ""
     langfuse_host: str = "https://cloud.langfuse.com"
+
+    # LaMa inpainting
+    lama_enabled: bool = True
+    lama_device: str = "cpu"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

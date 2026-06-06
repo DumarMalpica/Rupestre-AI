@@ -22,6 +22,7 @@ class FichaICANH(BaseModel):
     cited_sources: list[dict]
     interpretation_confidence: float
     reconstruction_applied: bool
+    lama_reconstruction_applied: bool = False
     requires_human_review: bool = False
     images: dict
 
@@ -40,11 +41,13 @@ def build_ficha_json(state: RupestreState, record_id: str) -> dict:
         cited_sources=state.get("cited_sources", []),
         interpretation_confidence=state.get("interpretation_confidence", 0.0),
         reconstruction_applied=state.get("reconstruction_applied", False),
+        lama_reconstruction_applied=state.get("lama_reconstruction_applied", False),
         requires_human_review=state.get("requires_human_review", False),
         images={
             "original": state.get("image_path", ""),
             "enhanced": state.get("enhanced_image", ""),
             "reconstructed": state.get("reconstructed_image", "") or "",
+            "lama_reconstructed": state.get("lama_reconstructed_image", "") or "",
         },
     )
     return ficha.model_dump()

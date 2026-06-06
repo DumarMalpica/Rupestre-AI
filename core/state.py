@@ -27,6 +27,9 @@ class RupestreState(TypedDict, total=False):
     reconstructed_image: str
     confidence_map: str | None
     reconstruction_applied: bool
+    # LaMa (paso extra después de AG5)
+    lama_reconstructed_image: str
+    lama_reconstruction_applied: bool
     # AG6
     ficha_pdf_path: str
     ficha_json: dict

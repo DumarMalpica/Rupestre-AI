@@ -38,3 +38,16 @@ twilio>=8.0.0
 
 # ── Modelos AI / YOLO ─────────────────────────────────────────────────────────
 ultralytics>=8.3.0
+
+# ── Inpainting / LaMa ─────────────────────────────────────────────────────────
+# LaMa inpainting via lama-cleaner (instalar con --no-deps):
+#   pip install lama-cleaner --no-deps
+#   pip install loguru yacs omegaconf einops timm scikit-image
+# Las dependencias conflictivas (flask, diffusers, transformers, etc.)
+# no son necesarias — solo se usa el modelo LaMa en CPU
+loguru
+yacs
+omegaconf
+einops
+timm
+scikit-image

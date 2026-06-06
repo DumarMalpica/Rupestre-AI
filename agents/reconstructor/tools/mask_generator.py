@@ -29,10 +29,6 @@ def generate_mask(image_path: str) -> str | None:
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
-    mask_pixels = int(np.sum(mask > 0))
-    if mask_pixels < h * w * 0.01:
-        return None  # deterioro < 1% → no requiere reconstrucción
-
     os.makedirs(settings.output_dir, exist_ok=True)
     stem = Path(image_path).stem
     output_path = os.path.join(settings.output_dir, f"{stem}_mask.png")
