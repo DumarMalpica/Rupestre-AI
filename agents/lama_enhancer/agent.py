@@ -10,9 +10,7 @@ logger = get_logger("lama_enhancer")
 @observe(name="lama_inpainting")
 def _lama_span(image_path: str, mask_path: str | None) -> tuple[str, bool]:
     result_path, applied = inpaint_with_lama(image_path, mask_path)
-    langfuse_context.update_current_observation(
-        output={"lama_applied": applied}
-    )
+    langfuse_context.update_current_observation(output={"lama_applied": applied})
     return result_path, applied
 
 
@@ -36,7 +34,9 @@ def lama_enhancer_node(state: RupestreState) -> dict:
         result = {
             "lama_reconstructed_image": reconstructed,
             "lama_reconstruction_applied": applied,
-            "reconstructed_image": reconstructed if applied else state.get("reconstructed_image"),
+            "reconstructed_image": (
+                reconstructed if applied else state.get("reconstructed_image")
+            ),
             "current_agent": "lama_enhancer",
         }
         langfuse_context.update_current_trace(
@@ -49,7 +49,5 @@ def lama_enhancer_node(state: RupestreState) -> dict:
 
     except Exception as exc:
         logger.error(f"Error en lama_enhancer_node: {exc}")
-        langfuse_context.update_current_trace(
-            output={"error": str(exc)}, level="ERROR"
-        )
+        langfuse_context.update_current_trace(output={"error": str(exc)}, level="ERROR")
         raise AgentExecutionError("lama_enhancer", str(exc)) from exc
