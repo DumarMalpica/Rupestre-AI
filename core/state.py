@@ -9,6 +9,8 @@ class RupestreState(TypedDict, total=False):
     site_name: str
     department: str
     municipality: str
+    investigator_name: str
+    archaeologist_id: str
     coordinates: tuple[float, float]
     session_id: str
     # AG1

@@ -227,6 +227,14 @@
       <span>{{ ficha.municipality }}</span>
     </div>
     <div class="data-item">
+      <label>Investigador</label>
+      <span>{{ ficha.investigator_name }}</span>
+    </div>
+    <div class="data-item">
+      <label>Registro arqueólogo</label>
+      <span>{{ ficha.archaeologist_id }}</span>
+    </div>
+    <div class="data-item">
       <label>Motivos registrados</label>
       <span>{{ ficha.motif_count }}</span>
     </div>
@@ -245,16 +253,16 @@
       <div class="img-box">Imagen original</div>
       <div class="img-caption">{{ ficha.images.original or "N/A" }}</div>
     </div>
-    <div class="gallery-item">
-      <div class="img-box">DStretch-LAB (realzada)</div>
-      <div class="img-caption">{{ ficha.images.enhanced or "N/A" }}</div>
-    </div>
     {% if ficha.reconstruction_applied %}
     <div class="gallery-item">
       <div class="img-box">DeepFillv2 (reconstruida)</div>
       <div class="img-caption">{{ ficha.images.reconstructed or "N/A" }}</div>
     </div>
     {% endif %}
+    <div class="gallery-item">
+      <div class="img-box">DStretch-LAB (realce de color)</div>
+      <div class="img-caption">{{ ficha.images.enhanced or "N/A" }}</div>
+    </div>
   </div>
 </div>
 

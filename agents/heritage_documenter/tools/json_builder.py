@@ -14,6 +14,8 @@ class FichaICANH(BaseModel):
     coordinates: tuple[float, float]
     department: str = "No especificado"
     municipality: str = "No especificado"
+    investigator_name: str = "No especificado"
+    archaeologist_id: str = "No especificado"
     motif_count: int
     detected_motifs: list[dict]
     similar_motifs: list[dict]
@@ -35,6 +37,8 @@ def build_ficha_json(state: RupestreState, record_id: str) -> dict:
         coordinates=state.get("coordinates", (0.0, 0.0)),
         department=state.get("department", "No especificado"),
         municipality=state.get("municipality", "No especificado"),
+        investigator_name=state.get("investigator_name", "No especificado"),
+        archaeologist_id=state.get("archaeologist_id", "No especificado"),
         motif_count=state.get("motif_count", 0),
         detected_motifs=state.get("detected_motifs", []),
         similar_motifs=state.get("similar_motifs", []),

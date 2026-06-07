@@ -32,6 +32,8 @@ async def analyze(
     longitude: float = Form(...),
     department: str = Form("No especificado"),
     municipality: str = Form("No especificado"),
+    investigator_name: str = Form("No especificado"),
+    archaeologist_id: str = Form("No especificado"),
 ) -> AnalyzeResponse:
     t0 = time.perf_counter()
 
@@ -49,6 +51,8 @@ async def analyze(
         "site_name": site_name,
         "department": department,
         "municipality": municipality,
+        "investigator_name": investigator_name,
+        "archaeologist_id": archaeologist_id,
         "coordinates": (latitude, longitude),
         "session_id": str(uuid.uuid4()),
         "errors": [],

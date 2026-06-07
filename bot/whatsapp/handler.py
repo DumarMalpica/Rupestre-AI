@@ -34,6 +34,13 @@ MSGS = {
         "_Comparte tu ubicación 📍 o escríbelas:_\n"
         "_Ejemplo: 5.634, -73.525_"
     ),
+    "ask_investigator": (
+        "👤 ¿Cuál es el *nombre del investigador*?\n" "_Ejemplo: María Fernanda Rojas_"
+    ),
+    "ask_arch_id": (
+        "🪪 ¿Cuál es tu *número de registro como arqueólogo* (ICANH)?\n"
+        "_Escribe 'N/A' si no aplica._"
+    ),
     "processing": (
         "⏳ *Procesando análisis...*\n\n"
         "El pipeline está analizando el pictograma:\n"
@@ -131,6 +138,26 @@ async def handle_message(
             return
 
         session.latitude, session.longitude = coords
+        session.state = "WAITING_INVESTIGATOR"
+        send_message(phone, MSGS["ask_investigator"])
+        return
+
+    # ── WAITING_INVESTIGATOR ──────────────────────────────────────────────────
+    if session.state == "WAITING_INVESTIGATOR":
+        if len(body_clean) < 3:
+            send_message(
+                phone,
+                "Por favor escribe el nombre del investigador (mín. 3 caracteres).",
+            )
+            return
+        session.investigator_name = body_clean.title()
+        session.state = "WAITING_ARCH_ID"
+        send_message(phone, MSGS["ask_arch_id"])
+        return
+
+    # ── WAITING_ARCH_ID ───────────────────────────────────────────────────────
+    if session.state == "WAITING_ARCH_ID":
+        session.archaeologist_id = body_clean
         session.state = "PROCESSING"
 
         # send_message es sync → el usuario recibe "Procesando..." inmediatamente
@@ -166,6 +193,8 @@ async def _run_pipeline(phone: str, session: ConversationSession) -> None:
             "site_name": session.site_name,
             "department": session.department or "No especificado",
             "municipality": session.municipality or "No especificado",
+            "investigator_name": session.investigator_name or "No especificado",
+            "archaeologist_id": session.archaeologist_id or "No especificado",
             "coordinates": (session.latitude, session.longitude),
             "session_id": str(uuid.uuid4()),
             "errors": [],
@@ -185,6 +214,7 @@ async def _run_pipeline(phone: str, session: ConversationSession) -> None:
             f"🪨 *Análisis completado*\n\n"
             f"📍 Sitio: {session.site_name}\n"
             f"🗺️ {session.municipality}, {session.department}\n"
+            f"👤 Investigador: {session.investigator_name}\n"
             f"🔍 Motivos detectados: *{motif_count}*\n"
             f"📊 Confianza RAG: *{confidence:.0%}*\n"
         )

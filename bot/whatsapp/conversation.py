@@ -1,11 +1,13 @@
 """
 Estados del flujo conversacional de Rupestre AI por WhatsApp:
-  WAITING_PHOTO       → esperando foto del pictograma
-  WAITING_SITE_NAME   → esperando nombre del sitio
+  WAITING_PHOTO        → esperando foto del pictograma
+  WAITING_SITE_NAME    → esperando nombre del sitio
   WAITING_MUNICIPALITY → esperando municipio y departamento
-  WAITING_COORDINATES → esperando coordenadas GPS
-  PROCESSING          → pipeline ejecutándose
-  DONE                → ficha entregada
+  WAITING_COORDINATES  → esperando coordenadas GPS
+  WAITING_INVESTIGATOR → esperando nombre del investigador
+  WAITING_ARCH_ID      → esperando número de registro de arqueólogo
+  PROCESSING           → pipeline ejecutándose
+  DONE                 → ficha entregada
 """
 
 from __future__ import annotations
@@ -22,6 +24,8 @@ class ConversationSession:
     site_name: Optional[str] = None
     municipality: Optional[str] = None
     department: Optional[str] = None
+    investigator_name: Optional[str] = None
+    archaeologist_id: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     errors: list = field(default_factory=list)

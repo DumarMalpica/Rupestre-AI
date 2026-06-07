@@ -430,6 +430,8 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     coords = ficha.get("coordinates", (0.0, 0.0))
     dept = ficha.get("department", "No especificado")
     municipality = ficha.get("municipality", "No especificado")
+    investigator = ficha.get("investigator_name", "No especificado")
+    arch_id = ficha.get("archaeologist_id", "No especificado")
     motif_count = ficha.get("motif_count", 0)
     motifs = ficha.get("detected_motifs", [])
     similar = ficha.get("similar_motifs", [])
@@ -463,20 +465,17 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     header_table.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, -1), DARK),
-                ("TOPPADDING", (0, 0), (-1, -1), 12),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
-                ("LEFTPADDING", (0, 0), (-1, -1), 14),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 14),
+                ("TOPPADDING", (0, 0), (-1, -1), 0),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("ALIGN", (1, 0), (1, 0), "RIGHT"),
+                ("LINEBELOW", (0, 0), (-1, -1), 2, PRIMARY),
             ]
         )
     )
-    for s in [ST["title"], ST["subtitle"], ST["body"]]:
-        s.textColor = WHITE
     story.append(header_table)
-    ST = _styles()
 
     # ── BANNER DE ALERTA ──────────────────────────────────────────────────────
     if has_parallels:
@@ -510,8 +509,10 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
             [
                 ("SITIO RUPESTRE", site_name),
                 ("DEPARTAMENTO", dept),
-                ("COORDENADAS GPS", coord_str),
                 ("MUNICIPIO", municipality),
+                ("COORDENADAS GPS", coord_str),
+                ("INVESTIGADOR", investigator),
+                ("REGISTRO ARQUEÓLOGO", arch_id),
             ],
             ST,
             cols=2,
@@ -523,8 +524,8 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     images_info = ficha.get("images", {})
     gallery_items = [
         ("Original\ncaptura de campo", images_info.get("original", "N/A")),
-        ("Realzada\nDStretch-LAB", images_info.get("enhanced", "N/A")),
         ("Reconstruida\nLaMa", images_info.get("lama_reconstructed", "N/A")),
+        ("Realce de color\nDStretch-LAB", images_info.get("enhanced", "N/A")),
     ]
     col_w = (W - 2 * MARGIN) / 3
     gallery_cells = [
