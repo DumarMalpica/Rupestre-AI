@@ -164,6 +164,8 @@ async def _run_pipeline(phone: str, session: ConversationSession) -> None:
         state: dict[str, Any] = {
             "image_path": session.image_path,
             "site_name": session.site_name,
+            "department": session.department or "No especificado",
+            "municipality": session.municipality or "No especificado",
             "coordinates": (session.latitude, session.longitude),
             "session_id": str(uuid.uuid4()),
             "errors": [],

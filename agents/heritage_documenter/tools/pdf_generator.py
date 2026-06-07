@@ -21,6 +21,8 @@ from reportlab.platypus import (
     TableStyle,
 )
 
+from core.text_utils import clean_interpretation
+
 DARK = colors.HexColor("#1a1a2e")
 PRIMARY = colors.HexColor("#c0392b")
 ACCENT = colors.HexColor("#e67e22")
@@ -33,6 +35,17 @@ WARM_BG = colors.HexColor("#fef9f0")
 
 W, H = A4
 MARGIN = 18 * mm
+
+GREEN = colors.HexColor("#27ae60")
+
+
+def _conf_color(value: float):
+    """Color del indicador de confianza: verde alta, naranja media, rojo baja."""
+    if value >= 0.75:
+        return GREEN
+    if value >= 0.6:
+        return ACCENT
+    return PRIMARY
 
 
 def _styles():
@@ -51,9 +64,9 @@ def _styles():
         "section": base(
             "section",
             fontName="Helvetica-Bold",
-            fontSize=8,
-            textColor=TEXT_GRAY,
-            leading=10,
+            fontSize=10,
+            textColor=PRIMARY,
+            leading=13,
             spaceAfter=4,
         ),
         "card_label": base(
@@ -85,15 +98,15 @@ def _styles():
             "metric_val",
             fontName="Helvetica-Bold",
             fontSize=20,
-            textColor=PRIMARY,
+            textColor=ACCENT,
             leading=24,
             alignment=TA_CENTER,
         ),
         "metric_lbl": base(
             "metric_lbl",
-            fontName="Helvetica",
+            fontName="Helvetica-Bold",
             fontSize=7,
-            textColor=TEXT_GRAY,
+            textColor=colors.HexColor("#cdd0e0"),
             leading=9,
             alignment=TA_CENTER,
         ),
@@ -132,8 +145,8 @@ def _styles():
 def _section_header(title: str, ST: dict) -> list:
     return [
         Spacer(1, 5 * mm),
-        Paragraph(title.upper(), ST["section"]),
-        HRFlowable(width="100%", thickness=1, color=MID_GRAY, spaceAfter=4),
+        Paragraph(f'<font color="#c0392b">▌</font> {title.upper()}', ST["section"]),
+        HRFlowable(width="100%", thickness=1.5, color=PRIMARY, spaceAfter=4),
     ]
 
 
@@ -182,7 +195,7 @@ def _confidence_bar(confidence: float, width: float = 80) -> Table:
     bar.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (0, 0), PRIMARY),
+                ("BACKGROUND", (0, 0), (0, 0), _conf_color(pct)),
                 ("BACKGROUND", (1, 0), (1, 0), MID_GRAY),
                 ("TOPPADDING", (0, 0), (-1, -1), 0),
                 ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
@@ -203,13 +216,20 @@ def _motifs_grid(motifs: list[dict], ST: dict) -> Table:
         for m in motifs[i : i + cols]:
             conf = m.get("confidence", 0.0)
             clase = m.get("clase", "Desconocido").replace("_", " ").title()
+            conf_style = ParagraphStyle(
+                "motif_conf_dyn",
+                fontName="Helvetica-Bold",
+                fontSize=8,
+                textColor=_conf_color(conf),
+                leading=10,
+            )
             cell = [
-                Paragraph("MOTIVO", ST["card_label"]),
+                Paragraph('<font color="#c0392b">●</font> MOTIVO', ST["card_label"]),
                 Paragraph(clase, ST["motif_name"]),
                 Spacer(1, 2),
                 _confidence_bar(conf, cell_w - 22),
                 Spacer(1, 2),
-                Paragraph(f"{conf*100:.0f}% conf.", ST["motif_conf"]),
+                Paragraph(f"{conf*100:.0f}% conf.", conf_style),
             ]
             row_data.append(cell)
         while len(row_data) < cols:
@@ -220,9 +240,9 @@ def _motifs_grid(motifs: list[dict], ST: dict) -> Table:
     t.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, -1), LIGHT_GRAY),
-                ("BOX", (0, 0), (-1, -1), 0.5, MID_GRAY),
-                ("INNERGRID", (0, 0), (-1, -1), 0.5, WHITE),
+                ("BACKGROUND", (0, 0), (-1, -1), WARM_BG),
+                ("BOX", (0, 0), (-1, -1), 0.8, PRIMARY),
+                ("INNERGRID", (0, 0), (-1, -1), 0.8, WHITE),
                 ("TOPPADDING", (0, 0), (-1, -1), 8),
                 ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
                 ("LEFTPADDING", (0, 0), (-1, -1), 10),
@@ -308,11 +328,11 @@ def _metrics_row(
     t.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, -1), LIGHT_GRAY),
-                ("BOX", (0, 0), (-1, -1), 0.5, MID_GRAY),
-                ("INNERGRID", (0, 0), (-1, -1), 0.5, WHITE),
-                ("TOPPADDING", (0, 0), (-1, -1), 10),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+                ("BACKGROUND", (0, 0), (-1, -1), DARK),
+                ("BOX", (0, 0), (-1, -1), 0.5, DARK),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#33334e")),
+                ("TOPPADDING", (0, 0), (-1, -1), 12),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
             ]
@@ -538,14 +558,31 @@ def generate_pdf(ficha: dict, output_path: str) -> str:
     # ── INTERPRETACIÓN CULTURAL ───────────────────────────────────────────────
     story += _section_header("Interpretación cultural", ST)
 
+    conf_hex = _conf_color(confidence).hexval()[2:]
+    badge = Paragraph(
+        f'<font color="#{conf_hex}"><b>● CONFIANZA RAG: {confidence*100:.0f}%</b></font>',
+        ST["card_label"],
+    )
+
+    interp_clean = clean_interpretation(interp)
+    interp_cell: list[Any] = [badge, Spacer(1, 4)]
+    paragraphs = [p.strip() for p in interp_clean.split("\n") if p.strip()]
+    if not paragraphs:
+        paragraphs = ["Sin interpretación disponible."]
+    for idx, para in enumerate(paragraphs):
+        interp_cell.append(Paragraph(para, ST["body"]))
+        if idx < len(paragraphs) - 1:
+            interp_cell.append(Spacer(1, 5))
+
     interp_table = Table(
-        [[Paragraph(interp, ST["body"])]],
+        [[interp_cell]],
         colWidths=[W - 2 * MARGIN],
     )
     interp_table.setStyle(
         TableStyle(
             [
                 ("BACKGROUND", (0, 0), (-1, -1), WARM_BG),
+                ("LINEBEFORE", (0, 0), (0, -1), 3, PRIMARY),
                 ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#f0d9a0")),
                 ("TOPPADDING", (0, 0), (-1, -1), 10),
                 ("BOTTOMPADDING", (0, 0), (-1, -1), 10),

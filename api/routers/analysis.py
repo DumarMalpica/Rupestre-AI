@@ -30,6 +30,8 @@ async def analyze(
     site_name: str = Form(...),
     latitude: float = Form(...),
     longitude: float = Form(...),
+    department: str = Form("No especificado"),
+    municipality: str = Form("No especificado"),
 ) -> AnalyzeResponse:
     t0 = time.perf_counter()
 
@@ -45,6 +47,8 @@ async def analyze(
     state: RupestreState = {
         "image_path": img_path,
         "site_name": site_name,
+        "department": department,
+        "municipality": municipality,
         "coordinates": (latitude, longitude),
         "session_id": str(uuid.uuid4()),
         "errors": [],

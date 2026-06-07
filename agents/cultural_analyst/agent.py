@@ -1,11 +1,13 @@
 from agents.cultural_analyst.tools.corpus_retriever import retrieve_context
 from agents.cultural_analyst.tools.llm_client import get_llm_response
 from agents.cultural_analyst.tools.rag_chain import build_prompt
+from agents.cultural_analyst.tools.text_utils import enrich_motifs
 from agents.cultural_analyst.tools.vision_describer import describe_image
 from core.config import settings
 from core.exceptions import AgentExecutionError
 from core.logger import get_logger, langfuse_context, observe
 from core.state import RupestreState
+from core.text_utils import clean_interpretation
 
 logger = get_logger("cultural_analyst")
 
@@ -111,13 +113,16 @@ def cultural_analyst_node(state: RupestreState) -> dict:
     try:
         description = _vision_span(image_path)
 
+        # Reetiqueta motivos genéricos ("Drawing") con términos de la descripción
+        motifs = enrich_motifs(motifs, description)
+
         # Consulta al corpus: descripción visual + clases detectadas
         clases = " ".join(m["clase"] for m in motifs)
         query = f"{description} {clases}".strip()
         passages = _retrieve_span(query)
 
         prompt = _prompt_span(motifs, similar, site, coords, description, passages)
-        response = _llm_span(prompt)
+        response = clean_interpretation(_llm_span(prompt))
 
         cited_sources = _build_sources(passages)
         confidence = _estimate_confidence(passages)
@@ -129,6 +134,7 @@ def cultural_analyst_node(state: RupestreState) -> dict:
         )
         result = {
             "image_description": description,
+            "detected_motifs": motifs,
             "cultural_interpretation": response,
             "cited_sources": cited_sources,
             "interpretation_confidence": confidence,

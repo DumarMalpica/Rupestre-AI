@@ -33,6 +33,8 @@ def build_ficha_json(state: RupestreState, record_id: str) -> dict:
         generated_at=datetime.now().isoformat(),
         site_name=state.get("site_name", "Sitio desconocido"),
         coordinates=state.get("coordinates", (0.0, 0.0)),
+        department=state.get("department", "No especificado"),
+        municipality=state.get("municipality", "No especificado"),
         motif_count=state.get("motif_count", 0),
         detected_motifs=state.get("detected_motifs", []),
         similar_motifs=state.get("similar_motifs", []),

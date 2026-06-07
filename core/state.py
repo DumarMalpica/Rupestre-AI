@@ -7,6 +7,8 @@ class RupestreState(TypedDict, total=False):
     # INPUT usuario
     image_path: str
     site_name: str
+    department: str
+    municipality: str
     coordinates: tuple[float, float]
     session_id: str
     # AG1

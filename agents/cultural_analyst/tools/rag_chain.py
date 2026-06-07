@@ -53,5 +53,8 @@ def build_prompt(
         f"Proporciona una interpretación arqueológica fundamentada de los motivos, "
         f"citando los fragmentos del corpus (autor/obra) cuando los uses. Considera "
         f"el contexto cultural, cronológico y ritual del sitio. No inventes fuentes "
-        f"que no aparezcan en los fragmentos proporcionados."
+        f"que no aparezcan en los fragmentos proporcionados.\n\n"
+        f"Escribe en prosa clara y ordenada, en 2 o 3 párrafos cortos. NO uses "
+        f"formato markdown: nada de asteriscos (**), almohadillas (#) ni viñetas. "
+        f"Los nombres propios van en texto normal."
     )

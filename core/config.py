@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     min_image_resolution: int = 1_000_000  # 1MP
     max_upscale_factor: float = 4.0  # evita inflar imágenes extremadamente pequeñas
     blur_threshold: float = 30.0
+    # Realce DStretch: desviación objetivo del eje rojo-verde (canal a* LAB).
+    # Mayor = pigmento rojo más vívido. El ~95% de los pictogramas son rojos.
+    dstretch_red_std: float = 32.0
     hitl_confidence_threshold: float = 0.6
     langfuse_public_key: str = ""
     langfuse_secret_key: str = ""
