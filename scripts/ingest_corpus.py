@@ -1,10 +1,18 @@
-"""Ingesta de PDFs del corpus rupestre hacia ChromaDB."""
+"""Ingesta de PDFs del corpus rupestre hacia MongoDB (vector store).
+
+Corriendo en local, exporta MONGO_PUBLIC_URL (proxy TCP de Railway) para que
+el cliente encuentre la base. Dentro de Railway usa MONGO_URL automáticamente.
+"""
 
 from __future__ import annotations
 
 import argparse
 import sys
 from pathlib import Path
+
+# Permite ejecutar el script directamente (python scripts/ingest_corpus.py)
+# agregando la raíz del proyecto al sys.path.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 # Archivos excluidos por calidad o licencia
 _SKIP_FILES: frozenset[str] = frozenset(
@@ -16,7 +24,7 @@ _SKIP_FILES: frozenset[str] = frozenset(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Indexa PDFs de arte rupestre en ChromaDB"
+        description="Indexa PDFs de arte rupestre en MongoDB"
     )
     parser.add_argument(
         "--source",
@@ -26,7 +34,7 @@ def main() -> None:
     parser.add_argument(
         "--collection",
         default="corpus_rupestre",
-        help="Nombre de la colección ChromaDB (default: corpus_rupestre)",
+        help="Nombre de la colección MongoDB (default: corpus_rupestre)",
     )
     args = parser.parse_args()
 
@@ -65,7 +73,7 @@ def main() -> None:
         except Exception as exc:
             print(f"❌ Error procesando {pdf_path.name}: {exc}", file=sys.stderr)
 
-    print(f"\n📚 Total: {grand_total} chunks en colección '{args.collection}'")
+    print(f"\n📚 Total: {grand_total} chunks en MongoDB '{args.collection}'")
 
 
 if __name__ == "__main__":

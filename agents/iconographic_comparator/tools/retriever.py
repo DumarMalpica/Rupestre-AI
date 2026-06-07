@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from core.config import settings
+from core.logger import get_logger
+
+logger = get_logger("iconographic_comparator.retriever")
 
 _MOCK_MATCH = [
     {
@@ -13,33 +16,44 @@ _MOCK_MATCH = [
 
 
 def retrieve_similar(motif: dict, n_results: int = 3) -> list[dict]:
+    if not settings.mongo_uri:
+        return _MOCK_MATCH
+
     try:
-        from chromadb import PersistentClient
+        import numpy as np
 
-        client = PersistentClient(path=settings.chromadb_path)
-        collection = client.get_collection(settings.chromadb_collection)
+        from corpus.vectorstore.embedder import embed_text
+        from corpus.vectorstore.mongo_client import get_collection
 
-        query_text = f"motivo rupestre {motif.get('clase', '')}"
-        raw = collection.query(query_texts=[query_text], n_results=n_results)
-
-        ids = raw.get("ids", [[]])[0]
-        distances = raw.get("distances", [[]])[0]
-        metadatas = raw.get("metadatas", [[]])[0]
-
-        if not ids:
+        collection = get_collection()
+        docs = list(
+            collection.find(
+                {}, {"text": 1, "source": 1, "page": 1, "embedding": 1, "_id": 0}
+            )
+        )
+        if not docs:
             return _MOCK_MATCH
 
+        query_vec = np.asarray(
+            embed_text(f"motivo rupestre {motif.get('clase', '')}"), dtype=np.float32
+        )
+        matrix = np.asarray([d["embedding"] for d in docs], dtype=np.float32)
+        scores = matrix @ query_vec  # vectores normalizados → coseno
+        top_idx = np.argsort(scores)[::-1][:n_results]
+
         matches = []
-        for _id, dist, meta in zip(ids, distances, metadatas):
+        for i in top_idx:
+            doc = docs[int(i)]
             matches.append(
                 {
-                    "site": meta.get("site", _id),
-                    "score": round(1.0 - float(dist), 4),
-                    "cultura": meta.get("cultura", "desconocida"),
-                    "periodo": meta.get("periodo", "desconocido"),
+                    "site": doc.get("source", "desconocido"),
+                    "score": round(float(scores[int(i)]), 4),
+                    "cultura": doc.get("cultura", "desconocida"),
+                    "periodo": doc.get("periodo", "desconocido"),
                 }
             )
         return matches
 
-    except Exception:
+    except Exception as exc:
+        logger.warning(f"Retrieval iconográfico falló ({exc}) — usando mock")
         return _MOCK_MATCH

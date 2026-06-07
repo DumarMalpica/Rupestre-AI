@@ -43,6 +43,18 @@ def get_llm_response(prompt: str) -> str:
             llm = ChatOpenAI(model="gpt-4o", api_key=settings.openai_api_key)
             return llm.invoke(prompt).content
 
+        if provider == "anthropic":
+            import anthropic
+
+            client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+            response = client.messages.create(
+                model=settings.anthropic_model,
+                max_tokens=1500,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            text = next((b.text for b in response.content if b.type == "text"), "")
+            return text or _MOCK_RESPONSE
+
     except Exception:
         logger.warning("LLM provider '%s' falló, usando respuesta mock", provider)
 

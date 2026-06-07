@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir lama-cleaner --no-deps
 
 COPY . .
 
-RUN mkdir -p data/fichas data/samples data/chroma data/icanh_docs
+RUN mkdir -p data/fichas data/samples data/icanh_docs
 
 EXPOSE 8000
 

@@ -19,6 +19,7 @@ class RupestreState(TypedDict, total=False):
     similar_motifs: list[dict]
     has_regional_parallels: bool
     # AG4
+    image_description: str
     cultural_interpretation: str
     cited_sources: list[dict]
     interpretation_confidence: float

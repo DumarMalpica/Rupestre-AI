@@ -2,12 +2,25 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    llm_provider: str = "mock"  # opciones: mock, ollama, openai
+    llm_provider: str = "mock"  # opciones: mock, ollama, openai, anthropic
     openai_api_key: str = ""
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.3"
-    chromadb_path: str = "./data/chroma"
-    chromadb_collection: str = "corpus_rupestre"
+
+    # Anthropic (Claude) — visión + interpretación cultural
+    anthropic_api_key: str = ""
+    anthropic_model: str = "claude-opus-4-8"  # interpretación cultural (RAG)
+    vision_model: str = "claude-sonnet-4-6"  # descripción de la imagen
+
+    # MongoDB (vector store) — Railway self-hosted
+    # MONGO_URL: dominio privado (corriendo dentro de Railway)
+    # MONGO_PUBLIC_URL: proxy TCP (corriendo en local, p.ej. para indexar)
+    mongo_url: str = ""
+    mongo_public_url: str = ""
+    mongo_db: str = "rupestre"
+    mongo_collection: str = "corpus_rupestre"
+    corpus_top_k: int = 4  # pasajes recuperados por consulta
+
     output_dir: str = "./data/fichas"
     samples_dir: str = "./data/samples"
     min_image_resolution: int = 1_000_000  # 1MP
@@ -23,6 +36,11 @@ class Settings(BaseSettings):
     lama_device: str = "cpu"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    @property
+    def mongo_uri(self) -> str:
+        """URI efectiva: privada (Railway) con fallback a la pública (local)."""
+        return self.mongo_url or self.mongo_public_url
 
 
 settings = Settings()
