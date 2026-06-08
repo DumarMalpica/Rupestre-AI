@@ -1,7 +1,6 @@
 from agents.cultural_analyst.tools.corpus_retriever import retrieve_context
 from agents.cultural_analyst.tools.llm_client import get_llm_response
 from agents.cultural_analyst.tools.rag_chain import build_prompt
-from agents.cultural_analyst.tools.text_utils import enrich_motifs
 from agents.cultural_analyst.tools.vision_describer import describe_image
 from core.config import settings
 from core.exceptions import AgentExecutionError
@@ -113,10 +112,7 @@ def cultural_analyst_node(state: RupestreState) -> dict:
     try:
         description = _vision_span(image_path)
 
-        # Reetiqueta motivos genéricos ("Drawing") con términos de la descripción
-        motifs = enrich_motifs(motifs, description)
-
-        # Consulta al corpus: descripción visual + clases detectadas
+        # Consulta al corpus: descripción visual + clases detectadas por YOLO
         clases = " ".join(m["clase"] for m in motifs)
         query = f"{description} {clases}".strip()
         passages = _retrieve_span(query)
@@ -134,7 +130,6 @@ def cultural_analyst_node(state: RupestreState) -> dict:
         )
         result = {
             "image_description": description,
-            "detected_motifs": motifs,
             "cultural_interpretation": response,
             "cited_sources": cited_sources,
             "interpretation_confidence": confidence,

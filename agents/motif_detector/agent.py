@@ -1,5 +1,7 @@
 from agents.motif_detector.tools.annotator import annotate_image
 from agents.motif_detector.tools.sam_segmenter import segment_motifs
+from agents.motif_detector.tools.vision_classifier import classify_motifs
+from agents.motif_detector.tools.vision_detector import detect_motifs_vision
 from agents.motif_detector.tools.yolo_detector import detect_motifs
 from core.config import settings
 from core.exceptions import AgentExecutionError
@@ -9,11 +11,29 @@ from core.state import RupestreState
 logger = get_logger("motif_detector")
 
 
+@observe(name="vision_detection")
+def _vision_detect_span(image: str) -> list[dict]:
+    motifs = detect_motifs_vision(image)
+    langfuse_context.update_current_observation(
+        output={"motif_count": len(motifs), "clases": [m["clase"] for m in motifs]}
+    )
+    return motifs
+
+
 @observe(name="yolo_detection")
 def _yolo_span(image: str) -> list[dict]:
-    motifs = detect_motifs(image)
+    motifs = detect_motifs(image, settings.motif_confidence_threshold)
     langfuse_context.update_current_observation(output={"motif_count": len(motifs)})
     return motifs
+
+
+@observe(name="vision_classification")
+def _classify_span(image: str, motifs: list[dict]) -> list[dict]:
+    classified = classify_motifs(image, motifs)
+    langfuse_context.update_current_observation(
+        output={"clases": [m["clase"] for m in classified]}
+    )
+    return classified
 
 
 @observe(name="sam_segmentation")
@@ -40,7 +60,13 @@ def motif_detector_node(state: RupestreState) -> dict:
     try:
         enhanced = state["enhanced_image"]
 
-        motifs = _yolo_span(enhanced)
+        # Detector primario: Claude visión enumera todas las figuras con su tipo.
+        # Si no hay proveedor anthropic (o falla), cae a YOLO + clasificación.
+        motifs = _vision_detect_span(enhanced)
+        if not motifs:
+            motifs = _yolo_span(enhanced)
+            motifs = _classify_span(enhanced, motifs)
+
         motifs = _sam_span(enhanced, motifs)
         _annotation_span(enhanced, motifs, settings.output_dir)
 

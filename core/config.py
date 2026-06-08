@@ -21,6 +21,12 @@ class Settings(BaseSettings):
     mongo_collection: str = "corpus_rupestre"
     corpus_top_k: int = 4  # pasajes recuperados por consulta
 
+    # Detección de motivos (YOLO) + clasificación por visión
+    # Umbral bajo = más recall (detecta más figuras); las genéricas las
+    # reclasifica Claude visión recortando cada caja.
+    motif_confidence_threshold: float = 0.2
+    motif_max_classify: int = 20  # máx. recortes enviados a Claude por imagen
+
     output_dir: str = "./data/fichas"
     samples_dir: str = "./data/samples"
     min_image_resolution: int = 1_000_000  # 1MP

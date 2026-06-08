@@ -10,6 +10,14 @@ import argparse
 import sys
 from pathlib import Path
 
+# En Windows la consola usa cp1252 por defecto y revienta al imprimir emojis
+# (✅/❌/📚). Forzamos UTF-8 para que los mensajes de progreso no aborten la
+# ingesta. errors="replace" evita fallos ante caracteres no representables.
+for _stream in (sys.stdout, sys.stderr):
+    reconfigure = getattr(_stream, "reconfigure", None)
+    if reconfigure is not None:
+        reconfigure(encoding="utf-8", errors="replace")
+
 # Permite ejecutar el script directamente (python scripts/ingest_corpus.py)
 # agregando la raíz del proyecto al sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
