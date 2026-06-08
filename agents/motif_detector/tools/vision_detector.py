@@ -43,7 +43,7 @@ def _build_prompt(width: int, height: int) -> str:
         'la figura) y "confianza" (0.0-1.0 según qué tan claro es el motivo). '
         'Ejemplo: [{"tipo":"Figura antropomorfa","bbox":[120,80,260,400],'
         '"confianza":0.9}]. No incluyas texto fuera del JSON. Enumera cada figura '
-        "por separado aunque se repita el tipo; usa \"Motivo sin clasificar\" solo "
+        'por separado aunque se repita el tipo; usa "Motivo sin clasificar" solo '
         "si una figura es realmente irreconocible."
     )
 
