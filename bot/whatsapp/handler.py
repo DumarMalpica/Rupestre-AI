@@ -49,7 +49,8 @@ MSGS = {
         "• AG3: Comparando con inventario\n"
         "• AG4: Generando interpretación cultural\n"
         "• AG6: Generando ficha ICANH\n\n"
-        "_Esto puede tardar hasta 60 segundos._"
+        "_Esto puede tardar hasta media hora dependiendo del nivel de "
+        "complejidad del pictograma. Gracias por tu paciencia._"
     ),
     "error": (
         "❌ Ocurrió un error al procesar la imagen.\n"

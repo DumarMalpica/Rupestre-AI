@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     # reclasifica Claude visión recortando cada caja.
     motif_confidence_threshold: float = 0.2
     motif_max_classify: int = 20  # máx. recortes enviados a Claude por imagen
+    max_regional_parallels: int = 3  # máx. paralelos iconográficos en la ficha
 
     output_dir: str = "./data/fichas"
     samples_dir: str = "./data/samples"

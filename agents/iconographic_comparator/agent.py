@@ -1,4 +1,4 @@
-from agents.iconographic_comparator.tools.retriever import retrieve_similar
+from agents.iconographic_comparator.tools.parallel_finder import find_regional_parallels
 from core.exceptions import AgentExecutionError
 from core.logger import get_logger, langfuse_context, observe
 from core.state import RupestreState
@@ -6,18 +6,17 @@ from core.state import RupestreState
 logger = get_logger("iconographic_comparator")
 
 
-@observe(name="chroma_retrieve")
+@observe(name="parallel_search")
 def _retrieve_span(motifs: list[dict]) -> tuple[list[dict], bool]:
-    similar_motifs = []
-    for motif in motifs:
-        matches = retrieve_similar(motif)
-        similar_motifs.append({"motif_id": motif["id"], "top_matches": matches})
-
-    has_parallels = any(
-        m["score"] > 0.75 for sm in similar_motifs for m in sm.get("top_matches", [])
+    # Paralelos consolidados para todo el panel (máx. settings.max_regional_parallels),
+    # con sitio/cultura/período reales extraídos del corpus por Claude.
+    parallels = find_regional_parallels(motifs)
+    similar_motifs = (
+        [{"motif_id": "panel", "top_matches": parallels}] if parallels else []
     )
+    has_parallels = bool(parallels)
     langfuse_context.update_current_observation(
-        output={"has_parallels": has_parallels, "n_results": len(similar_motifs)}
+        output={"has_parallels": has_parallels, "n_parallels": len(parallels)}
     )
     return similar_motifs, has_parallels
 
