@@ -25,8 +25,8 @@ _CLASS_LABELS = {
     "shield": "Escudo / geométrico",
     "sun": "Figura solar",
     "lines": "Línea geométrica",
-    "drawing": "Motivo sin clasificar",
-    "figure": "Motivo sin clasificar",
+    "drawing": "Motivo rupestre",
+    "figure": "Figura antropomorfa",
 }
 
 # Taxonomía canónica para clasificación: las clases del modelo YOLO (en español,
