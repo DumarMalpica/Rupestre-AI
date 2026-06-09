@@ -41,6 +41,13 @@ class Settings(BaseSettings):
     langfuse_secret_key: str = ""
     langfuse_host: str = "https://cloud.langfuse.com"
 
+    # LangSmith (trazas del grafo LangGraph). Si langsmith_tracing != "true"
+    # o no hay API key, el grafo corre sin enviar trazas.
+    langsmith_tracing: str = "false"
+    langsmith_endpoint: str = "https://api.smith.langchain.com"
+    langsmith_api_key: str = ""
+    langsmith_project: str = "rupestre-ai"
+
     # LaMa inpainting
     lama_enabled: bool = True
     lama_device: str = "cpu"

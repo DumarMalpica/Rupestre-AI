@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import os
 import uuid
+from functools import partial
 from typing import Any
 
 from bot.whatsapp.conversation import ConversationSession, get_session, reset_session
@@ -11,6 +12,7 @@ from bot.whatsapp.parser import parse_coordinates, parse_municipality_department
 from bot.whatsapp.responder import send_document, send_message
 from core.graph import rupestre_graph
 from core.logger import get_logger
+from core.tracing import build_run_config
 
 logger = get_logger("whatsapp_handler")
 
@@ -204,7 +206,9 @@ async def _run_pipeline(phone: str, session: ConversationSession) -> None:
 
         # rupestre_graph.invoke es síncrono — lo ejecutamos en un thread pool
         loop = asyncio.get_running_loop()
-        result = await loop.run_in_executor(None, rupestre_graph.invoke, state)
+        result = await loop.run_in_executor(
+            None, partial(rupestre_graph.invoke, state, config=build_run_config(state))
+        )
 
         record_id = result.get("record_id", "N/A")
         motif_count = result.get("motif_count", 0)

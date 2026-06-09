@@ -32,11 +32,11 @@ def main() -> None:
 
     from core.graph import rupestre_graph
     from core.state import RupestreState
+    from core.tracing import build_run_config, langsmith_enabled
 
     session_id = str(uuid.uuid4())
-    print(
-        f"Session ID: {session_id}  (búscalo en LangFuse → Traces → filter by session)"
-    )
+    _tracer = "LangSmith" if langsmith_enabled() else "LangFuse"
+    print(f"Session ID: {session_id}  (búscalo en {_tracer} → Traces → session_id)")
 
     state: RupestreState = {
         "image_path": str(image_path),
@@ -48,7 +48,7 @@ def main() -> None:
     }
 
     start = time.time()
-    result = rupestre_graph.invoke(state)
+    result = rupestre_graph.invoke(state, config=build_run_config(state))
     elapsed = time.time() - start
 
     enhanced = "✓" if result.get("enhanced_image") else "✗"
@@ -73,9 +73,14 @@ def main() -> None:
     # Flush explícito: garantiza que las trazas se envíen antes de que el proceso termine
     try:
         from core.logger import langfuse_context
+        from core.tracing import flush_traces, langsmith_enabled
 
         langfuse_context.flush()
-        print("📡 Trazas enviadas a LangFuse ✓")
+        flush_traces()
+        print(
+            "📡 Trazas enviadas a "
+            + ("LangSmith ✓" if langsmith_enabled() else "LangFuse ✓")
+        )
     except Exception:
         pass
 

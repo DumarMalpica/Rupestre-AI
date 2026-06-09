@@ -10,6 +10,20 @@ load_dotenv()
 if os.getenv("LANGFUSE_BASE_URL") and not os.getenv("LANGFUSE_HOST"):
     os.environ["LANGFUSE_HOST"] = os.environ["LANGFUSE_BASE_URL"]
 
+# ─── LangSmith (trazas del grafo LangGraph) ──────────────────────────────────
+# LangGraph se auto-instrumenta cuando LANGSMITH_TRACING=true y hay API key:
+# cada nodo (agente) y cada paso del flujo se envían como sub-run a LangSmith.
+# Mapeamos además los alias legacy LANGCHAIN_* por compatibilidad.
+if os.getenv("LANGSMITH_TRACING", "").lower() == "true" and os.getenv(
+    "LANGSMITH_API_KEY"
+):
+    os.environ.setdefault("LANGCHAIN_TRACING_V2", "true")
+    os.environ.setdefault("LANGCHAIN_API_KEY", os.environ["LANGSMITH_API_KEY"])
+    if os.getenv("LANGSMITH_ENDPOINT"):
+        os.environ.setdefault("LANGCHAIN_ENDPOINT", os.environ["LANGSMITH_ENDPOINT"])
+    if os.getenv("LANGSMITH_PROJECT"):
+        os.environ.setdefault("LANGCHAIN_PROJECT", os.environ["LANGSMITH_PROJECT"])
+
 try:
     from langfuse import Langfuse
     from langfuse.decorators import langfuse_context, observe

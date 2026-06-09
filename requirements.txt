@@ -10,6 +10,7 @@ python-dotenv>=1.0.0
 
 # ── Observabilidad ────────────────────────────────────────────────────────────
 langfuse>=4.0.0
+langsmith>=0.1.0            # trazas del grafo LangGraph (auto-instrumentado)
 
 # ── Procesamiento de imagen ───────────────────────────────────────────────────
 # Headless: sin dependencias de GUI (apto para servidor)

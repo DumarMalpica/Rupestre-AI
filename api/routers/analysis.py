@@ -11,6 +11,7 @@ from api.schemas.response import AnalyzeResponse, RecordResponse
 from core.config import settings
 from core.graph import rupestre_graph
 from core.state import RupestreState
+from core.tracing import build_run_config
 
 router = APIRouter(prefix="/api")
 
@@ -59,7 +60,7 @@ async def analyze(
         "current_agent": "",
     }
 
-    result = rupestre_graph.invoke(state)
+    result = rupestre_graph.invoke(state, config=build_run_config(state))
     elapsed = round(time.perf_counter() - t0, 2)
 
     # Imagen rechazada por control de calidad
